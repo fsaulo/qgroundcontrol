@@ -20,7 +20,7 @@ CustomFirmwarePlugin::CustomFirmwarePlugin()
     for (int i = 0; i < _flightModeInfoList.count(); i++) {
         FlightModeInfo_t& info = _flightModeInfoList[i];
         //-- Narrow the flight mode options to only these
-        if (info.name != _holdFlightMode && info.name != _rtlFlightMode && info.name != _missionFlightMode) {
+        if (info.name != _stabilizedFlightMode && info.name != _posCtlFlightMode && info.name != _holdFlightMode && info.name != _missionFlightMode && info.name != _rtlFlightMode) { //AA - restrict flight modes
             // No other flight modes can be set
             info.canBeSet = false;
         }
@@ -40,7 +40,7 @@ const QVariantList& CustomFirmwarePlugin::toolIndicators(const Vehicle* vehicle)
         // any new toolbar indicators which are added upstream in our custom build.
         _toolIndicatorList = FirmwarePlugin::toolIndicators(vehicle);
         // Then specifically remove the RC RSSI indicator.
-        _toolIndicatorList.removeOne(QVariant::fromValue(QUrl::fromUserInput("qrc:/toolbar/RCRSSIIndicator.qml")));
+        //_toolIndicatorList.removeOne(QVariant::fromValue(QUrl::fromUserInput("qrc:/toolbar/RCRSSIIndicator.qml"))); //AA removes the RC RSSI which we dont always wants
     }
     return _toolIndicatorList;
 }
@@ -50,8 +50,11 @@ const QVariantList& CustomFirmwarePlugin::toolIndicators(const Vehicle* vehicle)
 bool CustomFirmwarePlugin::hasGimbal(Vehicle* /*vehicle*/, bool& rollSupported, bool& pitchSupported, bool& yawSupported)
 {
     rollSupported = false;
-    pitchSupported = true;
-    yawSupported = true;
+    //pitchSupported = true;
+    pitchSupported = false;
+    //yawSupported = true;              //AA - disabled hasgimbal
+    yawSupported = false;
 
-    return true;
+    //return true;
+    return false;
 }

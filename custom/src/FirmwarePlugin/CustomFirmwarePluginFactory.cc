@@ -32,7 +32,7 @@ QList<QGCMAVLink::FirmwareClass_t> CustomFirmwarePluginFactory::supportedFirmwar
 QList<QGCMAVLink::VehicleClass_t> CustomFirmwarePluginFactory::supportedVehicleClasses(void) const
 {
     QList<QGCMAVLink::VehicleClass_t> vehicleClasses;
-    vehicleClasses.append(QGCMAVLink::VehicleClassMultiRotor);
+    vehicleClasses.append(QGCMAVLink::VehicleClassFixedWing);
     return vehicleClasses;
 }
 

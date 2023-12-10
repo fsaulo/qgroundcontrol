@@ -36,10 +36,10 @@ const QVariantList& CustomAutoPilotPlugin::vehicleComponents()
         if (_vehicle) {
             bool showAdvanced = qgcApp()->toolbox()->corePlugin()->showAdvancedUI();
             if (_vehicle->parameterManager()->parametersReady()) {
-                if (showAdvanced) {
-                    _airframeComponent = new AirframeComponent(_vehicle, this);
-                    _airframeComponent->setupTriggerSignals();
-                    _components.append(QVariant::fromValue(reinterpret_cast<VehicleComponent*>(_airframeComponent)));
+					 if (showAdvanced) {
+                _airframeComponent = new AirframeComponent(_vehicle, this);
+                _airframeComponent->setupTriggerSignals();                    //AA Having this here instea of below makes it always present
+                _components.append(QVariant::fromValue(reinterpret_cast<VehicleComponent*>(_airframeComponent)));
 
                     _sensorsComponent = new SensorsComponent(_vehicle, this);
                     _sensorsComponent->setupTriggerSignals();
@@ -57,9 +57,25 @@ const QVariantList& CustomAutoPilotPlugin::vehicleComponents()
                     _powerComponent->setupTriggerSignals();
                     _components.append(QVariant::fromValue(reinterpret_cast<VehicleComponent*>(_powerComponent)));
 
-                    _motorComponent = new MotorComponent(_vehicle, this);
-                    _motorComponent->setupTriggerSignals();
-                    _components.append(QVariant::fromValue(reinterpret_cast<VehicleComponent*>(_motorComponent)));
+                    //_motorComponent = new MotorComponent(_vehicle, this);                             //AA - disabled to add actuators
+                    //_motorComponent->setupTriggerSignals();
+                    //_components.append(QVariant::fromValue(reinterpret_cast<VehicleComponent*>(_motorComponent)));
+
+                    if (_vehicle->actuators()) {
+                        _vehicle->actuators()->init(); // At this point params are loaded, so we can init the actuators
+                    }
+                    if (_vehicle->actuators() && _vehicle->actuators()->showUi()) {
+                        _actuatorComponent = new ActuatorComponent(_vehicle, this, this);               //AA - added actuators
+                        _actuatorComponent->setupTriggerSignals();
+                        _components.append(QVariant::fromValue(static_cast<VehicleComponent*>(_actuatorComponent)));
+                    } else {
+                        // show previous motor UI instead
+                        _motorComponent = new MotorComponent(_vehicle, this, this);
+                        _motorComponent->setupTriggerSignals();
+                        _components.append(QVariant::fromValue(static_cast<VehicleComponent*>(_motorComponent)));
+                    }
+
+
                 }
 
                 _safetyComponent = new SafetyComponent(_vehicle, this);

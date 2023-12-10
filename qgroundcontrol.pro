@@ -11,7 +11,7 @@ QMAKE_PROJECT_DEPTH = 0 # undocumented qmake flag to force absolute paths in mak
 
 # These are disabled until proven correct
 DEFINES += QGC_GST_TAISYNC_DISABLED
-DEFINES += QGC_GST_MICROHARD_DISABLED
+DEFINES += QGC_GST_MICROHARD_ENABLED
 
 exists($${OUT_PWD}/qgroundcontrol.pro) {
     error("You must use shadow build (e.g. mkdir build; cd build; qmake ../qgroundcontrol.pro).")
@@ -27,7 +27,7 @@ message(Qt version $$[QT_VERSION])
 
 include(QGCCommon.pri)
 
-TARGET   = QGroundControl
+TARGET   = AAGS
 TEMPLATE = app
 QGCROOT  = $$PWD
 
@@ -60,11 +60,11 @@ WindowsBuild {
 # Branding
 #
 
-QGC_APP_NAME        = "QGroundControl"
-QGC_ORG_NAME        = "QGroundControl.org"
-QGC_ORG_DOMAIN      = "org.qgroundcontrol"
-QGC_APP_DESCRIPTION = "Open source ground control app provided by QGroundControl dev team"
-QGC_APP_COPYRIGHT   = "Copyright (C) 2019 QGroundControl Development Team. All rights reserved."
+QGC_APP_NAME        = "AAGS"
+QGC_ORG_NAME        = "AppliedAeronautics"
+QGC_ORG_DOMAIN      = "AppliedAeronautics.com"
+QGC_APP_DESCRIPTION = "Open source ground control app provided by Applied Aeronautics dev team"
+QGC_APP_COPYRIGHT   = "Copyright (C) 2023 Applied Aeronautics Development Team. All rights reserved."
 
 WindowsBuild {
     QGC_INSTALLER_SCRIPT        = "$$SOURCE_DIR\\deploy\\windows\\nullsoft_installer.nsi"
@@ -332,7 +332,7 @@ include(QGCExternalLibs.pri)
 
 CustomBuild {
     exists($$PWD/custom/qgroundcontrol.qrc) {
-        message("Using custom qgroundcontrol.qrc")
+        message("Using Applied Aeronautics Ground station.qrc")
         RESOURCES += $$PWD/custom/qgroundcontrol.qrc
     } else {
         RESOURCES += $$PWD/qgroundcontrol.qrc
@@ -356,9 +356,9 @@ CustomBuild {
         RESOURCES += $$PWD/resources/InstrumentValueIcons/InstrumentValueIcons.qrc
     }
 } else {
-    DEFINES += QGC_APPLICATION_NAME=\"\\\"QGroundControl\\\"\"
-    DEFINES += QGC_ORG_NAME=\"\\\"QGroundControl.org\\\"\"
-    DEFINES += QGC_ORG_DOMAIN=\"\\\"org.qgroundcontrol\\\"\"
+    DEFINES += QGC_APPLICATION_NAME='"\\\"Applied Aeronautics Ground Station\\\""'
+    DEFINES += QGC_ORG_NAME=\"\\\"Applied Aeronautics\\\"\"
+    DEFINES += QGC_ORG_DOMAIN=\"\\\"AppliedAeronautics.com\\\"\"
     RESOURCES += \
         $$PWD/qgroundcontrol.qrc \
         $$PWD/qgcresources.qrc \
