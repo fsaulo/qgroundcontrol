@@ -3,9 +3,9 @@ message("Adding Custom Plugin")
 #-- Version control
 #   Major and minor versions are defined here (manually)
 
-CUSTOM_QGC_VER_MAJOR = 0
-CUSTOM_QGC_VER_MINOR = 0
-CUSTOM_QGC_VER_FIRST_BUILD = 0
+CUSTOM_QGC_VER_MAJOR = 2
+CUSTOM_QGC_VER_MINOR = 0.2
+CUSTOM_QGC_VER_FIRST_BUILD = 1
 
 # Build number is automatic
 # Uses the current branch. This way it works on any branch including build-server's PR branches
@@ -17,8 +17,8 @@ win32 {
 }
 CUSTOM_QGC_VERSION = $${CUSTOM_QGC_VER_MAJOR}.$${CUSTOM_QGC_VER_MINOR}.$${CUSTOM_QGC_VER_BUILD}
 
-DEFINES -= APP_VERSION_STR=\"\\\"$$APP_VERSION_STR\\\"\"
-DEFINES += APP_VERSION_STR=\"\\\"$$CUSTOM_QGC_VERSION\\\"\"
+DEFINES -= GIT_VERSION=\"\\\"$$GIT_VERSION\\\"\"
+DEFINES += GIT_VERSION=\"\\\"$$CUSTOM_QGC_VERSION\\\"\"
 
 message(Custom QGC Version: $${CUSTOM_QGC_VERSION})
 
@@ -34,19 +34,19 @@ CONFIG  += QGC_DISABLE_PX4_PLUGIN_FACTORY
 DEFINES += CUSTOMHEADER=\"\\\"CustomPlugin.h\\\"\"
 DEFINES += CUSTOMCLASS=CustomPlugin
 
-TARGET   = CustomQGroundControl
-DEFINES += QGC_APPLICATION_NAME='"\\\"Custom QGroundControl\\\""'
+TARGET   = AAGS #AA - if app problems look at this.
+DEFINES += QGC_APPLICATION_NAME='"\\\"AAGS\\\""'
 
-DEFINES += QGC_ORG_NAME=\"\\\"qgroundcontrol.org\\\"\"
-DEFINES += QGC_ORG_DOMAIN=\"\\\"org.qgroundcontrol\\\"\"
+DEFINES += QGC_ORG_NAME=\"\\\"AppliedAeronautics.com\\\"\"
+DEFINES += QGC_ORG_DOMAIN=\"\\\"com.AppliedAeronautics\\\"\"
 
-QGC_APP_NAME        = "Custom QGroundControl"
-QGC_BINARY_NAME     = "CustomQGroundControl"
-QGC_ORG_NAME        = "Custom"
-QGC_ORG_DOMAIN      = "org.custom"
-QGC_ANDROID_PACKAGE = "org.custom.qgroundcontrol"
-QGC_APP_DESCRIPTION = "Custom QGroundControl"
-QGC_APP_COPYRIGHT   = "Copyright (C) 2020 QGroundControl Development Team. All rights reserved."
+QGC_APP_NAME        = "AAGS"
+QGC_BINARY_NAME     = "AAGS"
+QGC_ORG_NAME        = "AppliedAeronautics"
+QGC_ORG_DOMAIN      = "com.AppliedAeronautics"
+QGC_ANDROID_PACKAGE = "com.AppliedAeronautics"
+QGC_APP_DESCRIPTION = "AppliedAeronautics"
+QGC_APP_COPYRIGHT   = "Copyright (C) 2023 Applied Aeronautics. All rights reserved."
 
 # Our own, custom resources
 RESOURCES += \

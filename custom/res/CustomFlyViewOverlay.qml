@@ -93,6 +93,7 @@ Item {
     //-- Heading Indicator
     Rectangle {
         id:                         compassBar
+        visible:                    false // AA hides it
         height:                     ScreenTools.defaultFontPixelHeight * 1.5
         width:                      ScreenTools.defaultFontPixelWidth  * 50
         color:                      "#DEDEDE"
@@ -133,7 +134,8 @@ Item {
         }
     }
     Rectangle {
-        id:                         headingIndicator
+        id:                         headingIndicator //AA added - rectangle at top by compass bar
+        visible:                    false
         height:                     ScreenTools.defaultFontPixelHeight
         width:                      ScreenTools.defaultFontPixelWidth * 4
         color:                      qgcPal.windowShadeDark
@@ -149,6 +151,7 @@ Item {
     }
     Image {
         id:                         compassArrowIndicator
+        visible:                    false
         height:                     _indicatorsHeight
         width:                      height
         source:                     "/custom/img/compass_pointer.svg"
@@ -159,15 +162,16 @@ Item {
         anchors.horizontalCenter:   parent.horizontalCenter
     }
 
-    Rectangle {
+    Rectangle { // AA - controls the rectangle of the compass in bottom right
         id:                     compassBackground
         anchors.bottom:         attitudeIndicator.bottom
         anchors.right:          attitudeIndicator.left
         anchors.rightMargin:    -attitudeIndicator.width / 2
-        width:                  -anchors.rightMargin + compassBezel.width + (_toolsMargin * 2)
+        width:                  -anchors.rightMargin + compassBezel.width + (_toolsMargin * 2) // AA - control the rectangle of the compass in bottom right
         height:                 attitudeIndicator.height * 0.75
-        radius:                 2
-        color:                  qgcPal.window
+        radius:                 20 // AA changed
+        color:                 Qt.rgba(9,9,9,.55) // AA changed
+        //color: "transparent" //AA added - also looks good
 
         Rectangle {
             id:                     compassBezel
@@ -177,8 +181,9 @@ Item {
             width:                  height
             height:                 parent.height - (northLabelBackground.height / 2) - (headingLabelBackground.height / 2)
             radius:                 height / 2
-            border.color:           qgcPal.text
-            border.width:           1
+            //border.color:           qgcPal.text
+            border.color:           "black"       //AA added
+            border.width:           4           //AA added - compass border width
             color:                  Qt.rgba(0,0,0,0)
         }
 
@@ -187,8 +192,9 @@ Item {
             anchors.top:                compassBezel.top
             anchors.topMargin:          -height / 2
             anchors.horizontalCenter:   compassBezel.horizontalCenter
-            width:                      northLabel.contentWidth * 1.5
-            height:                     northLabel.contentHeight * 1.5
+            width:                      northLabel.contentWidth * 2 //AA added
+            height:                     northLabel.contentHeight * 1 //AA added
+            //height:                     northLabel.contentHeight * 1.5
             radius:                     ScreenTools.defaultFontPixelWidth  * 0.25
             color:                      qgcPal.windowShade
 
@@ -197,7 +203,7 @@ Item {
                 anchors.centerIn:   parent
                 text:               "N"
                 color:              qgcPal.text
-                font.pointSize:     ScreenTools.smallFontPointSize
+                font.pointSize:     ScreenTools.mediumFontPointSize * 1 //AA added
             }
         }
 
@@ -206,7 +212,7 @@ Item {
             anchors.centerIn:   compassBezel
             height:             compassBezel.height * 0.75
             width:              height
-            source:             "/custom/img/compass_needle.svg"
+            source:             "/custom/img/albatross.svg" //AA added Albatross logo
             fillMode:           Image.PreserveAspectFit
             sourceSize.height:  height
             transform: [
@@ -222,28 +228,32 @@ Item {
             anchors.top:                compassBezel.bottom
             anchors.topMargin:          -height / 2
             anchors.horizontalCenter:   compassBezel.horizontalCenter
-            width:                      headingLabel.contentWidth * 1.5
-            height:                     headingLabel.contentHeight * 1.5
+            width:                      headingLabel.contentWidth * 3 //AA added
+            height:                     headingLabel.contentHeight * 1 //AA added
+            //height:                     headingLabel.contentHeight * 1.5
             radius:                     ScreenTools.defaultFontPixelWidth  * 0.25
             color:                      qgcPal.windowShade
+
 
             QGCLabel {
                 id:                 headingLabel
                 anchors.centerIn:   parent
                 text:               _heading
                 color:              qgcPal.text
-                font.pointSize:     ScreenTools.smallFontPointSize
+                font.pointSize:     ScreenTools.mediumFontPointSize //AA added
             }
         }
     }
 
     Rectangle {
         id:                     attitudeIndicator
-        anchors.bottomMargin:   _toolsMargin + parentToolInsets.bottomEdgeRightInset
-        anchors.rightMargin:    _toolsMargin
+        anchors.bottomMargin:   _toolsMargin + 62 //AA used if you want clearance for the telemetry bar
+        //anchors.bottomMargin:   _toolsMargin //AA if you want the attitude to be o the bottom
+        //anchors.rightMargin:    _toolsMargin
         anchors.bottom:         parent.bottom
         anchors.right:          parent.right
-        height:                 ScreenTools.defaultFontPixelHeight * 6
+        //height:                 ScreenTools.defaultFontPixelHeight * 6
+        height:                 ScreenTools.defaultFontPixelHeight * 12 //AA - increases attitude icon size and compass
         width:                  height
         radius:                 height * 0.5
         color:                  qgcPal.windowShade
@@ -253,6 +263,9 @@ Item {
             vehicle:            _activeVehicle
             showHeading:        false
             anchors.centerIn:   parent
+
+
+
         }
     }
 }

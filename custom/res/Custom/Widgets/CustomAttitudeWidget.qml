@@ -29,8 +29,9 @@ Item {
     property real _rollAngle:   vehicle ? vehicle.roll.rawValue  : 0
     property real _pitchAngle:  vehicle ? vehicle.pitch.rawValue : 0
 
-    width:  size
-    height: size
+
+    width:  size      //AA - changes size - NO, use FlyViewCustomLayer.qml
+    height:  size           //AA - changes size - NO, use FlyViewCustomLayer.qml
 
     Item {
         id:             instrument
