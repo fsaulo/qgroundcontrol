@@ -24,7 +24,8 @@ Item {
     anchors.bottom: parent.bottom
     width:          telemIcon.width * 1.1
 
-    property bool showIndicator: _hasTelemetry
+    property bool showIndicator: true               ///AA make peristent
+    ///property bool showIndicator: _hasTelemetry
 
     property var  _activeVehicle:   QGroundControl.multiVehicleManager.activeVehicle
     property bool _hasTelemetry:    _activeVehicle ? _activeVehicle.telemetryLRSSI !== 0 : false
@@ -45,7 +46,7 @@ Item {
                 anchors.centerIn:   parent
                 QGCLabel {
                     id:             telemLabel
-                    text:           qsTr("Telemetry RSSI Status")
+                    text:           qsTr("High-Speed Link Status")
                     font.family:    ScreenTools.demiboldFontFamily
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
@@ -55,20 +56,22 @@ Item {
                     columnSpacing:      ScreenTools.defaultFontPixelWidth
                     columns:            2
                     anchors.horizontalCenter: parent.horizontalCenter
-                    QGCLabel { text: qsTr("Local RSSI:") }
-                    QGCLabel { text: _activeVehicle.telemetryLRSSI + " dBm"}
-                    QGCLabel { text: qsTr("Remote RSSI:") }
-                    QGCLabel { text: _activeVehicle.telemetryRRSSI + " dBm"}
-                    QGCLabel { text: qsTr("RX Errors:") }
-                    QGCLabel { text: _activeVehicle.telemetryRXErrors }
-                    QGCLabel { text: qsTr("Errors Fixed:") }
-                    QGCLabel { text: _activeVehicle.telemetryFixed }
-                    QGCLabel { text: qsTr("TX Buffer:") }
-                    QGCLabel { text: _activeVehicle.telemetryTXBuffer }
-                    QGCLabel { text: qsTr("Local Noise:") }
-                    QGCLabel { text: _activeVehicle.telemetryLNoise }
-                    QGCLabel { text: qsTr("Remote Noise:") }
-                    QGCLabel { text: _activeVehicle.telemetryRNoise }
+                    QGCLabel { text: qsTr("Uplink RSSI:") }  ///AA change to Microhard Telem - Note for Elsight/Halo
+///                    QGCLabel { text: _activeVehicle.telemetryLRSSI + " dBm"}
+QGCLabel { text: QGroundControl.microhardManager.linkConnected && QGroundControl.microhardManager.uplinkRSSI < 0 ? QGroundControl.microhardManager.uplinkRSSI + " dBm": "Disconnected"}
+                    QGCLabel { text: qsTr("Downlink RSSI:") }
+		    QGCLabel { text: QGroundControl.microhardManager.linkConnected && QGroundControl.microhardManager.downlinkRSSI < 0 ? QGroundControl.microhardManager.downlinkRSSI + " dBm": "Disconnected"}
+                  ///  QGCLabel { text: _activeVehicle.telemetryRRSSI + " dBm"}
+                    ///QGCLabel { text: qsTr("RX Errors:") }
+                    ///QGCLabel { text: _activeVehicle.telemetryRXErrors }
+                    ///QGCLabel { text: qsTr("Errors Fixed:") }
+                    ///QGCLabel { text: _activeVehicle.telemetryFixed }
+                    ///QGCLabel { text: qsTr("TX Buffer:") }
+                    ///QGCLabel { text: _activeVehicle.telemetryTXBuffer }
+                    ///QGCLabel { text: qsTr("Local Noise:") }
+                    ///QGCLabel { text: _activeVehicle.telemetryLNoise }
+                    ///QGCLabel { text: qsTr("Remote Noise:") }
+                    ///QGCLabel { text: _activeVehicle.telemetryRNoise }
                 }
             }
         }
@@ -79,7 +82,7 @@ Item {
         anchors.bottom:     parent.bottom
         width:              height
         sourceSize.height:  height
-        source:             "/qmlimages/TelemRSSI.svg"
+        source:             "/qmlimages/TelemRSSI-HS.svg"
         fillMode:           Image.PreserveAspectFit
         color:              qgcPal.buttonText
     }

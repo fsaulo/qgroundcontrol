@@ -33,7 +33,7 @@ Rectangle {
     property real _columnSpacing:       ScreenTools.defaultFontPixelHeight * 0.25
     property bool _uploadedSelected:    false
     property bool _showMavlinkLog:      QGroundControl.corePlugin.options.showMavlinkLogOptions
-    property bool _showAPMStreamRates:  QGroundControl.apmFirmwareSupported && QGroundControl.settingsManager.apmMavlinkStreamRateSettings.visible && _isAPM
+     //property bool _showAPMStreamRates:  QGroundControl.apmFirmwareSupported && QGroundControl.settingsManager.apmMavlinkStreamRateSettings.visible //AA Disable APM stream rates
     property var  _activeVehicle:       QGroundControl.multiVehicleManager.activeVehicle
     property bool _isPX4:               _activeVehicle ? _activeVehicle.px4Firmware : false
     property bool _isAPM:               _activeVehicle ? _activeVehicle.apmFirmware : false
@@ -196,7 +196,8 @@ Rectangle {
                 height:                     streamRatesLabel.height
                 anchors.margins:            ScreenTools.defaultFontPixelWidth
                 anchors.horizontalCenter:   parent.horizontalCenter
-                visible:                    _showAPMStreamRates
+                //visible:                    _showAPMStreamRates
+                visible:                      false         //AA disable APM stream rates
                 QGCLabel {
                     id:             streamRatesLabel
                     text:           qsTr("Telemetry Stream Rates (ArduPilot Only)")
@@ -209,7 +210,8 @@ Rectangle {
                 color:                      qgcPal.windowShade
                 anchors.margins:            ScreenTools.defaultFontPixelWidth
                 anchors.horizontalCenter:   parent.horizontalCenter
-                visible:                    _showAPMStreamRates
+                //visible:                    _showAPMStreamRates
+                visible:                      false         //AA disable APM stream rates
 
                 ColumnLayout {
                     id:                 streamRatesColumn
@@ -375,7 +377,8 @@ Rectangle {
                 visible:            _showMavlinkLog && _isPX4
                 QGCLabel {
                     id:             mavlogLabel
-                    text:           qsTr("MAVLink 2.0 Logging (PX4 Pro Only)")
+                    //text:           qsTr("MAVLink 2.0 Logging (PX4 Pro Only)")
+                    text: qsTr("MAVLink Logging") //AA update
                     font.family:    ScreenTools.demiboldFontFamily
                 }
             }
@@ -436,6 +439,7 @@ Rectangle {
                 anchors.margins:    ScreenTools.defaultFontPixelWidth
                 anchors.horizontalCenter: parent.horizontalCenter
                 visible:            _showMavlinkLog && _isPX4
+		visible:            false //AA Updated
                 QGCLabel {
                     id:             logLabel
                     text:           qsTr("MAVLink 2.0 Log Uploads (PX4 Pro Only)")
@@ -448,7 +452,8 @@ Rectangle {
                 color:          qgcPal.windowShade
                 anchors.margins: ScreenTools.defaultFontPixelWidth
                 anchors.horizontalCenter: parent.horizontalCenter
-                visible:        _showMavlinkLog && _isPX4
+                //visible:        _showMavlinkLog && _isPX4
+		visible:            false //AA Updated
                 Column {
                     id:         logColumn
                     spacing:    _columnSpacing

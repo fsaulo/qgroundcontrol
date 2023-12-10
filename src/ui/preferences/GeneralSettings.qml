@@ -135,6 +135,25 @@ Rectangle {
                             RowLayout {
                                 spacing: ScreenTools.defaultFontPixelWidth
 
+                                QGCLabel {
+                                    text:       qsTr("Telemetry Values Bar Location")
+                                    visible:    true
+                                }
+
+                                FactComboBox {
+                                    id:                     _telemValuesBarLocationCombobox
+                                    Layout.preferredWidth:  _comboFieldWidth
+                                    indexModel:             false
+                                    fact:                   _telemValuesBarLocation
+                                    visible:                true
+
+                                    property Fact   _telemValuesBarLocation:    QGroundControl.settingsManager.appSettings.telementryValuesBarLocation
+                                }
+                            }
+
+                            RowLayout {
+                                spacing: ScreenTools.defaultFontPixelWidth
+
                                 FactCheckBox {
                                     text:       qsTr("Virtual Joystick")
                                     visible:    _virtualJoystick.visible
@@ -452,17 +471,17 @@ Rectangle {
                                     fact:                   QGroundControl.settingsManager.appSettings.defaultMissionItemAltitude
                                 }
 
-                                QGCLabel { text: qsTr("VTOL TransitionDistance") }
-                                FactTextField {
-                                    Layout.preferredWidth:  _valueFieldWidth
-                                    fact:                   QGroundControl.settingsManager.planViewSettings.vtolTransitionDistance
-                                }
-                            }
+                                /*QGCLabel { text: qsTr("VTOL Transition Distance") }
+                                 FactTextField {
+                                     Layout.preferredWidth:  _valueFieldWidth
+                                     fact:                   QGroundControl.settingsManager.planViewSettings.vtolTransitionDistance
+                                 }*/ //AA- Removed
+                             }
 
-                            FactCheckBox {
-                                text:   qsTr("Use MAV_CMD_CONDITION_GATE for pattern generation")
-                                fact:   QGroundControl.settingsManager.planViewSettings.useConditionGate
-                            }
+                           /*  FactCheckBox {
+                                 text:   qsTr("Use MAV_CMD_CONDITION_GATE for pattern generation")
+                                 fact:   QGroundControl.settingsManager.planViewSettings.useConditionGate
+                             } */ //AA- Removed
 
                             FactCheckBox {
                                 text:       qsTr("Missions Do Not Require Takeoff Item")
@@ -1126,7 +1145,8 @@ Rectangle {
                     QGCLabel {
                         id:         brandImageSectionLabel
                         text:       qsTr("Brand Image")
-                        visible:    QGroundControl.settingsManager.brandImageSettings.visible && !ScreenTools.isMobile
+                        ///visible:    QGroundControl.settingsManager.brandImageSettings.visible && !ScreenTools.isMobile
+                        visible:    false ///AA - added to remove visibility
                     }
                     Rectangle {
                         Layout.preferredWidth:  brandImageGrid.width + (_margins * 2)

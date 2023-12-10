@@ -28,7 +28,7 @@
     "type":             "double",
     "units":            "m",
     "decimalPlaces":    1,
-    "default":          40.0
+    "default":          25.0
 },
 {
     "name":             "LoiterRadius",
@@ -61,7 +61,7 @@
     "min":              0.1,
     "max":              90,
     "decimalPlaces":    1,
-    "default":          6.0
+    "default":          3.0
 },
 {
     "name":         "ValueSetIsDistance",

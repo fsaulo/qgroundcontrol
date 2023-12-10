@@ -38,6 +38,8 @@ Item {
         anchors.fill:   parent
         visible:        false
 
+
+
         //----------------------------------------------------
         //-- Artificial Horizon
         CustomArtificialHorizon {

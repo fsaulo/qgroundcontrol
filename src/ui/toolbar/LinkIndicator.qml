@@ -44,7 +44,7 @@ Item {
             linkSelectionMenu.insertItem(i, menuItem)
         }
 
-        showIndicator = _rgLinkNames.length > 1
+        showIndicator = _rgLinkNames.length > 0     ///AA - keeps link selection on at all times
     }
 
     Component.onCompleted:  updateLinkSelectionMenu()
@@ -59,6 +59,7 @@ Item {
         color:                  qgcPal.buttonText
 
         MouseArea {
+	    
             anchors.fill:   parent
             onClicked:      linkSelectionMenu.popup()
         }

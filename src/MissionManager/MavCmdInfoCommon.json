@@ -72,7 +72,7 @@
             "param3": {
                 "label":            "Radius",
                 "units":            "m",
-                "default":          50.0,
+                "default":          75.0,
                 "decimalPlaces":    2
             },
             "param4": {
@@ -108,7 +108,7 @@
             "param3": {
                 "label":            "Radius",
                 "units":            "m",
-                "default":          50.0,
+                "default":          75.0,
                 "decimalPlaces":    2
             },
             "param4": {
@@ -145,7 +145,7 @@
             "param3": {
                 "label":            "Radius",
                 "units":            "m",
-                "default":          50.0,
+                "default":          75.0,
                 "decimalPlaces":    2
             },
             "param4": {
@@ -244,7 +244,7 @@
             "param2": {
                 "label":            "Radius",
                 "units":            "m",
-                "default":          50.0,
+                "default":          75.0,
                 "decimalPlaces":    2
             },
             "param4": {
