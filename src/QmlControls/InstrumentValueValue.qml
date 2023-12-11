@@ -37,8 +37,10 @@ ColumnLayout {
     QGCLabel {
         id:                 label
         Layout.alignment:   Qt.AlignVCenter
-        font.pointSize:     _fontSize
-        color:              instrumentValueData.isValidColor(instrumentValueData.currentColor) ? instrumentValueData.currentColor : qgcPal.text
+        font.pointSize:     _fontSize //AA increases the telemetry value size
+        //font.pointSize:     _fontSize * 1.25 //AA increases the telemetry value size
+        //font.bold:          true            //AA makes text is bold
+        color:              "black"
         text:               valueText()
 
         function valueText() {

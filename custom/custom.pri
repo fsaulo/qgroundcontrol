@@ -4,7 +4,7 @@ message("Adding Custom Plugin")
 #   Major and minor versions are defined here (manually)
 
 CUSTOM_QGC_VER_MAJOR = 2
-CUSTOM_QGC_VER_MINOR = 0.2
+CUSTOM_QGC_VER_MINOR = 0.3
 CUSTOM_QGC_VER_FIRST_BUILD = 1
 
 # Build number is automatic

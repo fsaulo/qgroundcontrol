@@ -283,7 +283,7 @@ FlightMap {
             vehicle:        object
             coordinate:     object.coordinate
             map:            _root
-            size:           pipMode ? ScreenTools.defaultFontPixelHeight : ScreenTools.defaultFontPixelHeight * 3
+            size:           pipMode ? ScreenTools.defaultFontPixelHeight : ScreenTools.defaultFontPixelHeight * 6 // AA added Controls vehicle size when planning (*3 is normal)
             z:              QGroundControl.zOrderVehicles
         }
     }

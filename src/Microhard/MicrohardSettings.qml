@@ -77,7 +77,7 @@ Rectangle {
                         Column {
                             spacing:        ScreenTools.defaultFontPixelWidth
                             FactCheckBox {
-                                text:       qsTr("Enable Microhard")
+                                text:       qsTr("Show Advanced Wireless IP Settings")
                                 fact:       _microhardEnabledFact
                                 enabled:    true
                                 visible:    _microhardEnabledFact ? _microhardEnabledFact.visible : false
@@ -205,6 +205,7 @@ Rectangle {
                                 inputMethodHints:    Qt.ImhFormattedNumbersOnly
                                 Layout.minimumWidth: _valueWidth
                             }
+
                             QGCLabel {
                                 text:           qsTr("Remote IP Address:")
                             }
@@ -245,15 +246,54 @@ Rectangle {
                                 Layout.minimumWidth: _valueWidth
                             }
                             QGCLabel {
-                                text:           qsTr("Encryption key:")
+                                text:           qsTr("Transmission Distance (in m) \non Ground Unit only:")
+                                font.pointSize:             ScreenTools.smallFontPointSize
+
                             }
                             QGCTextField {
                                 id:             encryptionKey
                                 text:           QGroundControl.microhardManager.encryptionKey
                                 enabled:        true
-                                echoMode:       TextInput.Password
+                                //echoMode:       TextInput.Password
+                                inputMethodHints:    Qt.ImhDigitsOnly
                                 Layout.minimumWidth: _valueWidth
                             }
+                            QGCLabel {
+                                    text:           qsTr("Power Output (in dBm) on Ground Unit only.\nSet to 30 when using a booster:")
+                                    font.pointSize:             ScreenTools.smallFontPointSize
+
+                                }
+                            QGCTextField {
+                                    id:             txPower
+                                    text:           QGroundControl.microhardManager.txPower
+                                    enabled:        true
+                                    //echoMode:       TextInput.Password
+                                    inputMethodHints:    Qt.ImhFormattedNumbersOnly
+                                    Layout.minimumWidth: _valueWidth
+                            }
+                            QGCLabel {
+                                text:           qsTr("Channel frequency \non Ground Unit only:")
+                                font.pointSize:             ScreenTools.smallFontPointSize
+                            }
+                            QGCComboBox {
+                                id:             connectingChannel
+                                model:          QGroundControl.microhardManager.channelLabels
+                                currentIndex:   QGroundControl.microhardManager.connectingChannel - QGroundControl.microhardManager.channelMin
+                                Layout.minimumWidth: _valueWidth
+                            }
+                            QGCLabel {
+                                text:           qsTr("Channel bandwidth \non Ground Unit only:")
+                                font.pointSize:             ScreenTools.smallFontPointSize
+                            }
+                            QGCComboBox {
+                                id:             connectingBandwidth
+                                model:          QGroundControl.microhardManager.bandwidthLabels
+                                currentIndex:   QGroundControl.microhardManager.connectingBandwidth
+                                Layout.minimumWidth: _valueWidth
+                            }
+                           // QGCLabel {
+                             //   text:           qsTr("Channel bandwidth \non Ground Unit only:")
+                               // font.pointSize:             ScreenTools.smallFontPointSize
                         }
                         Item {
                             width:  1
@@ -265,26 +305,48 @@ Rectangle {
                                     return true
                                 return false
                             }
+                            function validateDistance(distance) {
+                                                            if (/^(([2-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-8][0-9]{4}|9[0-8][0-9]{3}|99[0-8][0-9]{2}|999[0-8][0-9]|9999[0-9]|1[0-9]{5}|200000)?)$/.test(distance))
+                                                                return true
+                                                            return false
+                                                        }
+                            function validateRange(range) {
+                                                            if (/^(([7-9]|[12][0-9]|30)?)$/.test(range))
+                                                                return true
+                                                            return false
+                                                        }
                             function testEnabled() {
-                                if(localIP.text          === QGroundControl.microhardManager.localIPAddr &&
-                                    remoteIP.text        === QGroundControl.microhardManager.remoteIPAddr &&
-                                    netMask.text         === QGroundControl.microhardManager.netMask &&
-                                    configUserName.text  === QGroundControl.microhardManager.configUserName &&
-                                    configPassword.text  === QGroundControl.microhardManager.configPassword &&
-                                    encryptionKey.text   === QGroundControl.microhardManager.encryptionKey)
+                                if(localIP.text              === QGroundControl.microhardManager.localIPAddr &&
+                                    remoteIP.text            === QGroundControl.microhardManager.remoteIPAddr &&
+                                    netMask.text             === QGroundControl.microhardManager.netMask &&
+                                    configUserName.text      === QGroundControl.microhardManager.configUserName &&
+                                    configPassword.text      === QGroundControl.microhardManager.configPassword &&
+                                    encryptionKey.text       === QGroundControl.microhardManager.encryptionKey &&
+                                    txPower.text             === QGroundControl.microhardManager.txPower &&
+                                    connectingChannel.text   === QGroundControl.microhardManager.connectingChannel &&
+                                    connectingBandwidth.text === QGroundControl.microhardManager.connectingBandwidth)
                                     return false
                                 if(!validateIPaddress(localIP.text))  return false
                                 if(!validateIPaddress(remoteIP.text)) return false
                                 if(!validateIPaddress(netMask.text))  return false
+                                if(!validateDistance(encryptionKey.text))  return false
+                                if(!validateRange(txPower.text))  return false
                                 return true
                             }
                             enabled:            testEnabled()
                             text:               qsTr("Apply")
                             anchors.horizontalCenter:   parent.horizontalCenter
                             onClicked: {
-                                QGroundControl.microhardManager.setIPSettings(localIP.text, remoteIP.text, netMask.text, configUserName.text, configPassword.text, encryptionKey.text)
+                                QGroundControl.microhardManager.setIPSettings(localIP.text,
+                                                                              remoteIP.text,
+                                                                              netMask.text,
+                                                                              configUserName.text,
+                                                                              configPassword.text,
+                                                                              encryptionKey.text,
+                                                                              txPower.text,
+                                                                              connectingChannel.currentIndex + QGroundControl.microhardManager.channelMin,
+                                                                              connectingBandwidth.currentIndex)
                             }
-
                         }
                     }
                 }

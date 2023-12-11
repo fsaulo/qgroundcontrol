@@ -13,6 +13,10 @@
 #include "QGCApplication.h"
 #include "QGCCorePlugin.h"
 
+#ifdef QGC_ENABLE_PAIRING
+#include "PairingManager.h"
+#endif
+
 #include <QSettings>
 
 #define SHORT_TIMEOUT 2500
@@ -25,30 +29,53 @@ static const char *kNET_MASK            = "NetMask";
 static const char *kCFG_USERNAME        = "ConfigUserName";
 static const char *kCFG_PASSWORD        = "ConfigPassword";
 static const char *kENC_KEY             = "EncryptionKey";
+static const char *kTX_POW              = "TXPower";
+static const char *kPAIR_CH             = "PairingChannel";
+static const char *kCONN_CH             = "ConnectingChannel";
+static const char *kCONN_BW             = "ConnectingBandwidth";
 
 //-----------------------------------------------------------------------------
 MicrohardManager::MicrohardManager(QGCApplication* app, QGCToolbox* toolbox)
     : QGCTool(app, toolbox)
 {
-    connect(&_workTimer, &QTimer::timeout, this, &MicrohardManager::_checkMicrohard);
-    _workTimer.setSingleShot(true);
-    connect(&_locTimer, &QTimer::timeout, this, &MicrohardManager::_locTimeout);
-    connect(&_remTimer, &QTimer::timeout, this, &MicrohardManager::_remTimeout);
-    QSettings settings;
-    settings.beginGroup(kMICROHARD_GROUP);
-    _localIPAddr    = settings.value(kLOCAL_IP,       QString("192.168.168.1")).toString();
-    _remoteIPAddr   = settings.value(kREMOTE_IP,      QString("192.168.168.2")).toString();
-    _netMask        = settings.value(kNET_MASK,       QString("255.255.255.0")).toString();
-    _configUserName = settings.value(kCFG_USERNAME,   QString("admin")).toString();
-    _configPassword = settings.value(kCFG_PASSWORD,   QString("admin")).toString();
-    _encryptionKey  = settings.value(kENC_KEY,        QString("1234567890")).toString();
-    settings.endGroup();
 }
 
 //-----------------------------------------------------------------------------
 MicrohardManager::~MicrohardManager()
 {
     _close();
+}
+
+//-----------------------------------------------------------------------------
+void
+MicrohardManager::setToolbox(QGCToolbox* toolbox)
+{
+    QGCTool::setToolbox(toolbox);
+
+    connect(&_workTimer, &QTimer::timeout, this, &MicrohardManager::_checkMicrohard, Qt::QueuedConnection);
+    _workTimer.setSingleShot(true);
+    connect(&_locTimer, &QTimer::timeout, this, &MicrohardManager::_locTimeout, Qt::QueuedConnection);
+    connect(&_remTimer, &QTimer::timeout, this, &MicrohardManager::_remTimeout, Qt::QueuedConnection);
+    connect(this, &MicrohardManager::pairingChannelChanged, this, &MicrohardManager::_updateSettings, Qt::QueuedConnection);
+
+    QSettings settings;
+    settings.beginGroup(kMICROHARD_GROUP);
+    _localIPAddr         = settings.value(kLOCAL_IP,       QString("192.168.168.1")).toString();
+    _remoteIPAddr        = settings.value(kREMOTE_IP,      QString("192.168.168.2")).toString();
+    _netMask             = settings.value(kNET_MASK,       QString("255.255.255.0")).toString();
+    _configUserName      = settings.value(kCFG_USERNAME,   QString("admin")).toString();
+    _configPassword      = settings.value(kCFG_PASSWORD,   QString("admin")).toString();
+    _encryptionKey       = settings.value(kENC_KEY,        QString("5000")).toString();
+    _txPower             = settings.value(kTX_POW,         QString("30")).toString();
+    _pairingChannel      = settings.value(kPAIR_CH,        DEFAULT_PAIRING_CHANNEL).toInt();
+    _connectingChannel   = settings.value(kCONN_CH,        DEFAULT_PAIRING_CHANNEL).toInt();
+    _connectingBandwidth = settings.value(kCONN_BW,        DEFAULT_CONNECTING_BANDWIDTH).toInt();
+    settings.endGroup();
+
+    setProductName("");
+
+    //-- Start it all
+    _reset();
 }
 
 //-----------------------------------------------------------------------------
@@ -81,7 +108,7 @@ MicrohardManager::_reset()
     emit linkConnectedChanged();
     if(!_appSettings) {
         _appSettings = _toolbox->settingsManager()->appSettings();
-        connect(_appSettings->enableMicrohard(), &Fact::rawValueChanged, this, &MicrohardManager::_setEnabled);
+        connect(_appSettings->enableMicrohard(), &Fact::rawValueChanged, this, &MicrohardManager::_setEnabled, Qt::QueuedConnection);
     }
     _setEnabled();
 }
@@ -107,42 +134,45 @@ MicrohardManager::_createMetadata(const char* name, QStringList enums)
 
 //-----------------------------------------------------------------------------
 void
-MicrohardManager::setToolbox(QGCToolbox* toolbox)
-{
-    QGCTool::setToolbox(toolbox);
-    //-- Start it all
-    _reset();
-}
-
-//-----------------------------------------------------------------------------
-void
 MicrohardManager::switchToConnectionEncryptionKey(QString encryptionKey)
 {
     _communicationEncryptionKey = encryptionKey;
-    _useCommunicationEncryptionKey = true;
+    _usePairingSettings = false;
 }
 
 //-----------------------------------------------------------------------------
 void
 MicrohardManager::switchToPairingEncryptionKey()
 {
-    _useCommunicationEncryptionKey = false;
+    _usePairingSettings = true;
 }
 
 //-----------------------------------------------------------------------------
 void
-MicrohardManager::setEncryptionKey()
+MicrohardManager::configure()
 {
     if (_mhSettingsLoc) {
-        _mhSettingsLoc->setEncryptionKey(_useCommunicationEncryptionKey ? _communicationEncryptionKey : _encryptionKey);
+#ifdef QGC_ENABLE_PAIRING
+        if (_toolbox->pairingManager()->usePairing()) {
+            if (_usePairingSettings) {
+                _mhSettingsLoc->configure(_encryptionKey, _pairingPower, _pairingChannel, 1);
+            } else {
+                _mhSettingsLoc->configure(_communicationEncryptionKey, _connectingPower, _connectingChannel, _connectingBandwidth, _txPower);
+            }
+            return;
+        }
+#endif \
+    // _mhSettingsLoc->configure(_encryptionKey, _connectingChannel, _connectingBandwidth, _txPower);
+        _mhSettingsLoc->configure(_encryptionKey, _txPower, _connectingChannel, _connectingBandwidth);
+        //_mhSettingsLoc->configure(_encryptionKey, _pairingPower, _connectingChannel, _connectingBandwidth);
+        //_mhSettingsLoc->configure(_pairingPower, _connectingChannel, _connectingBandwidth);
     }
 }
 
 //-----------------------------------------------------------------------------
 void
-MicrohardManager::updateSettings()
+MicrohardManager::_updateSettings()
 {
-    setEncryptionKey();
     QSettings settings;
     settings.beginGroup(kMICROHARD_GROUP);
     settings.setValue(kLOCAL_IP, _localIPAddr);
@@ -150,24 +180,42 @@ MicrohardManager::updateSettings()
     settings.setValue(kNET_MASK, _netMask);
     settings.setValue(kCFG_PASSWORD, _configPassword);
     settings.setValue(kENC_KEY, _encryptionKey);
+    settings.setValue(kTX_POW,  _txPower);
+    settings.setValue(kPAIR_CH, QString::number(_pairingChannel));
+    settings.setValue(kCONN_CH, QString::number(_connectingChannel));
+    settings.setValue(kCONN_BW, QString::number(_connectingBandwidth));
     settings.endGroup();
+}
 
+//-----------------------------------------------------------------------------
+void
+MicrohardManager::updateSettings()
+{
+    configure();
+    _updateSettings();
     _reset();
 }
 
 //-----------------------------------------------------------------------------
 bool
-MicrohardManager::setIPSettings(QString localIP_, QString remoteIP_, QString netMask_, QString cfgUserName_, QString cfgPassword_, QString encryptionKey_)
+
+MicrohardManager::setIPSettings(QString localIP, QString remoteIP, QString netMask, QString cfgUserName, QString cfgPassword, QString encryptionKey, QString txPower, int channel, int bandwidth)
 {
-    if (_localIPAddr != localIP_ || _remoteIPAddr != remoteIP_ || _netMask != netMask_ ||
-        _configUserName != cfgUserName_ || _configPassword != cfgPassword_ || _encryptionKey != encryptionKey_)
+
+
+    if (_localIPAddr != localIP || _remoteIPAddr != remoteIP || _netMask != netMask ||
+        _configUserName != cfgUserName || _configPassword != cfgPassword || _encryptionKey != encryptionKey ||
+        _connectingChannel != channel || _connectingBandwidth != bandwidth || _txPower != txPower)
     {
-        _localIPAddr    = localIP_;
-        _remoteIPAddr   = remoteIP_;
-        _netMask        = netMask_;
-        _configUserName = cfgUserName_;
-        _configPassword = cfgPassword_;
-        _encryptionKey  = encryptionKey_;
+        _localIPAddr         = localIP;
+        _remoteIPAddr        = remoteIP;
+        _netMask             = netMask;
+        _configUserName      = cfgUserName;
+        _configPassword      = cfgPassword;
+        _encryptionKey       = encryptionKey;
+        _connectingChannel   = channel;
+        _connectingBandwidth = bandwidth;
+        _txPower             = txPower;
 
         updateSettings();
 
@@ -185,13 +233,13 @@ MicrohardManager::_setEnabled()
     if(enable) {
         if(!_mhSettingsLoc) {
             _mhSettingsLoc = new MicrohardSettings(localIPAddr(), this, true);
-            connect(_mhSettingsLoc, &MicrohardSettings::connected,      this, &MicrohardManager::_connectedLoc);
-            connect(_mhSettingsLoc, &MicrohardSettings::rssiUpdated,    this, &MicrohardManager::_rssiUpdatedLoc);
+            connect(_mhSettingsLoc, &MicrohardSettings::connected,      this, &MicrohardManager::_connectedLoc, Qt::QueuedConnection);
+            connect(_mhSettingsLoc, &MicrohardSettings::rssiUpdated,    this, &MicrohardManager::_rssiUpdatedLoc, Qt::QueuedConnection);
         }
         if(!_mhSettingsRem) {
             _mhSettingsRem = new MicrohardSettings(remoteIPAddr(), this);
-            connect(_mhSettingsRem, &MicrohardSettings::connected,      this, &MicrohardManager::_connectedRem);
-            connect(_mhSettingsRem, &MicrohardSettings::rssiUpdated,    this, &MicrohardManager::_rssiUpdatedRem);
+            connect(_mhSettingsRem, &MicrohardSettings::connected,      this, &MicrohardManager::_connectedRem, Qt::QueuedConnection);
+            connect(_mhSettingsRem, &MicrohardSettings::rssiUpdated,    this, &MicrohardManager::_rssiUpdatedRem, Qt::QueuedConnection);
         }
         _workTimer.start(SHORT_TIMEOUT);
     } else {
@@ -306,3 +354,102 @@ MicrohardManager::_checkMicrohard()
     }
     _workTimer.start(_connectedStatus > 0 ? SHORT_TIMEOUT : LONG_TIMEOUT);
 }
+
+//-----------------------------------------------------------------------------
+void
+MicrohardManager::setProductName(QString product)
+{
+    qCDebug(MicrohardLog) << "Detected Microhard modem: " << product;
+
+    _channelMin = 3;
+    //_channelMax = 76;
+    _channelMax = 23;
+    int frequencyStart = 905;
+    //int powerStart = 20;
+
+
+    _bandwidthLabels.clear();
+    _bandwidthLabels.append("Auto");
+    _bandwidthLabels.append("64QAM_5/6");
+    _bandwidthLabels.append("64QAM_3/4");
+    _bandwidthLabels.append("64QAM_2/3");
+    _bandwidthLabels.append("16QAM_3/4");
+    _bandwidthLabels.append("16QAM_1/2");
+    _bandwidthLabels.append("QPSK_3/4");
+    _bandwidthLabels.append("QPSK_1/2");
+    _bandwidthLabels.append("BPSK_1/2");
+
+    //    _powerLabels.clear();
+    //    _powerLabels.append("7 dBm");
+    //    _powerLabels.append("8 dBm");
+    //    _powerLabels.append("9 dBm");
+    //    _powerLabels.append("10 dBm");
+    //    _powerLabels.append("11 dBm");
+    //    _powerLabels.append("12 dBm");
+    //    _powerLabels.append("13 dBm");
+    //    _powerLabels.append("14 dBm");
+    //    _powerLabels.append("15 dBm");
+    //    _powerLabels.append("16 dBm");
+    //    _powerLabels.append("17 dBm");
+    //    _powerLabels.append("18 dBm");
+    //    _powerLabels.append("19 dBm");
+    //    _powerLabels.append("20 dBm");
+    //    _powerLabels.append("21 dBm");
+    //    _powerLabels.append("22 dBm");
+    //    _powerLabels.append("22 dBm");
+    //    _powerLabels.append("23 dBm");
+    //    _powerLabels.append("24 dBm");
+    //    _powerLabels.append("25 dBm");
+    //    _powerLabels.append("26 dBm");
+    //    _powerLabels.append("27 dBm");
+    //    _powerLabels.append("28 dBm");
+    //    _powerLabels.append("29 dBm");
+    //    _powerLabels.append("30 dBm");
+
+
+
+    if (product == "pDDL924" || product == "pDDL924") {
+        _channelMin = 3;
+        _channelMax = 23;
+        frequencyStart = 905;
+
+        //    } else if (product == "pMDDL2450" || product == "pDDL2450") {
+        //        _channelMin = 6;
+        //        _channelMax = 76;
+        //        frequencyStart = 2407;
+        //    } else if (product == "pMDDL1800" || product == "pDDL1800" ) {
+        //        _channelMin = 3;
+        //        _channelMax = 57;
+        //        frequencyStart = 1813;
+        //        _bandwidthLabels.clear();
+        //        _bandwidthLabels.append("4 MHz");
+        //        _bandwidthLabels.append("2 MHz");
+    }
+
+    _channelLabels.clear();
+    for (int i = _channelMin; i <= _channelMax; i++) {
+        _channelLabels.append(QString::number(i).rightJustified(2, '0') +
+                              " - " +
+                              QString::number(i + frequencyStart - _channelMin) +
+                              " MHz");
+    }
+
+    if (_pairingChannel < _channelMin) {
+        _pairingChannel = _channelMin;
+    } else if (_pairingChannel > _channelMax) {
+        _pairingChannel = _channelMax;
+    }
+    if (_connectingChannel < _channelMin) {
+        _connectingChannel = _channelMin;
+    } else if (_connectingChannel > _channelMax) {
+        _connectingChannel = _channelMax;
+    }
+
+    emit channelLabelsChanged();
+    emit bandwidthLabelsChanged();
+    emit pairingChannelChanged();
+    emit connectingChannelChanged();
+    //emit powerLabelsChanged();
+}
+
+//-----------------------------------------------------------------------------

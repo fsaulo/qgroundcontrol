@@ -17,12 +17,19 @@ import QGroundControl.Controls      1.0
 import QGroundControl.Palette       1.0
 
 Rectangle {
-    id:         _root
-    width:      ScreenTools.defaultFontPixelWidth * 45
-    height:     mainLayout.height + (_margins * 2)
-    radius:     ScreenTools.defaultFontPixelWidth / 2
-    color:      qgcPal.window
-    visible:    false
+    //id:         _root
+   // width:      ScreenTools.defaultFontPixelWidth * 45
+    //height:     mainLayout.height + (_margins * 2)
+    //radius:     ScreenTools.defaultFontPixelWidth / 2
+    //color:      qgcPal.window
+    //visible:    false
+    id:                     _root
+    Layout.minimumWidth:    mainLayout.width + (_margins * 2)
+    Layout.preferredHeight: mainLayout.height + (_margins * 2)
+    radius:                 ScreenTools.defaultFontPixelWidth / 2
+    color:                  qgcPal.windowShadeLight
+    visible:                false //AA set to true when testing only. persists slide box
+
 
     property var    guidedController
     property var    guidedValueSlider
@@ -83,18 +90,60 @@ Rectangle {
     QGCPalette { id: qgcPal }
 
     ColumnLayout {
-        id:                 mainLayout
-        anchors.margins:    _margins
-        anchors.left:       parent.left
-        anchors.right:      parent.right
-        spacing:            _margins
+        id:                         mainLayout
+        //anchors.horizontalCenter:   parent.horizontalCenter
+        //anchors.centerIn:           parent //AA added                     //AA location of slider
+        //anchors.horizontalCenter:   parent.width / 2
+        //anchors.verticalCenter:     parent.height / 2
+        spacing:                    _margins
+
+        Rectangle {
+            width: 450                      //AA width of box where text is
+            height:  30                     //AA height of box where text is
+            //Layout.alignment: Qt.AlignHCenter
+            //Layout.alignment: Qt.AlignCenter
+            //Layout.leftMargin: -50
+            //anchors.  horizontalCenter: parent.horizontalCenter
+            //anchors.horizontalCenterOffet: -100                  //AA to get sentered
+            Layout.leftMargin: -60                                  //AA to get sentered
+            //radius: 30
+            //color:      (qgcPal.globalTheme === QGCPalette.Light ? Qt.rgba(1,1,1,0.5) : Qt.rgba(1,1,1,0.5)) //AA controls the background color of where the text goes above the slider
+            //color:       Qt.rgba(9,9,9,.55)                                   //AA color of background slider - matches side telem at this color
+            //color:      (qgcPal.globalTheme === QGCPalette.Light ? "white" : "white") //AA controls the background color of where the text goes above the slider
+            color:         "transparent"
+            //z:   QGroundControl.zOrderVehicles
+            //z: QGroundControl.zOrderWaypointLines
+
+
 
         QGCLabel {
             id:                     messageText
             Layout.fillWidth:       true
-            horizontalAlignment:    Text.AlignHCenter
+            //Layout.alignment: Qt.AlignVCenter
+            font.bold:              true                            //AA added bold
+            font.pointSize:         ScreenTools.mediumFontPointSize //AA Increases font size
+            anchors.horizontalCenter: parent.horizontalCenter       //AA centers text horizontally
+            //Layout.alignment:       parent.horizontalCenter
+            //horizontalAlignment:    Text.AlignHCenter
+            //verticalAlignment:       Text.AlignVCenter
+            //Layout.alignment:       parent.verticalCenter
+            anchors.verticalCenter: parent.verticalCenter           //AA centers text verically
+            Layout.topMargin: -50          //AA to get centered
             wrapMode:               Text.WordWrap
-            font.pointSize:         ScreenTools.mediumFontPointSize
+            //color: "black" //AA controls text color above slider
+            color:      (qgcPal.globalTheme === QGCPalette.Light ? "black" : "black") //AA controls text color above slider
+
+            Rectangle {
+                width: Math.max(messageText.width * 1.2, 420)
+                height: messageText.height + mainLayout.height
+                //color: "red"
+                color:  Qt.rgba(9,9,9,.55)
+                radius: 30
+                anchors.horizontalCenter: parent.horizontalCenter
+                z: _fullItemZorder - 1
+
+            }
+
         }
 
         QGCCheckBox {
@@ -105,13 +154,14 @@ Rectangle {
         }
 
         RowLayout {
-            Layout.fillWidth:   true
-            spacing:            ScreenTools.defaultFontPixelWidth
+            //Layout.alignment:       Qt.AlignHCenter
+            spacing:                ScreenTools.defaultFontPixelWidth
 
             SliderSwitch {
                 id:                 slider
                 confirmText:        ScreenTools.isMobile ? qsTr("Slide to confirm") : qsTr("Slide or hold spacebar")
-                Layout.fillWidth:   true
+                //Layout.fillWidth:   true
+		 Layout.minimumWidth:    Math.max(implicitWidth, ScreenTools.defaultFontPixelWidth * 30)
 
                 onAccept: {
                     _root.visible = false
@@ -152,3 +202,4 @@ Rectangle {
     }
 }
 
+}

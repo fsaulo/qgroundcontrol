@@ -20,7 +20,8 @@ Rectangle {
     id:                 telemetryPanel
     height:             telemetryLayout.height + (_toolsMargin * 2)
     width:              telemetryLayout.width + (_toolsMargin * 2)
-    color:              qgcPal.window
+    //color:              qgcPal.window
+    color:                 Qt.rgba(9,9,9,.55)
     radius:             ScreenTools.defaultFontPixelWidth / 2
 
     property bool       bottomMode: true
@@ -34,7 +35,9 @@ Rectangle {
         anchors.left:       parent.left
 
          RowLayout {
-            visible: mouseArea.containsMouse || valueArea.settingsUnlocked
+            //visible: mouseArea.containsMouse || valueArea.settingsUnlocked
+             visible: QGroundControl.corePlugin.showAdvancedUI && mouseArea.containsMouse || valueArea.settingsUnlocked //AA added the pencil to showup only (and therefor + too) when in advanced ui for editing.
+            //visible: false             //AA added to not make rectagle grow and this controls seeing the + for new icons and changing them
 
             QGCColoredImage {
                 source:             "/res/layout-bottom.svg"
@@ -44,7 +47,8 @@ Rectangle {
                 sourceSize.width:   width
                 color:              qgcPal.text
                 fillMode:           Image.PreserveAspectFit
-                visible:            !bottomMode
+                //visible:            !bottomMode
+                visible:            false //AA added
 
                 QGCMouseArea {
                     fillItem:   parent
@@ -60,7 +64,8 @@ Rectangle {
                 sourceSize.width:   width
                 color:              qgcPal.text
                 fillMode:           Image.PreserveAspectFit
-                visible:            bottomMode
+                //visible:            bottomMode
+                visible:            false //AA added
 
                 QGCMouseArea {
                     fillItem:   parent
@@ -74,7 +79,9 @@ Rectangle {
                 width:              ScreenTools.minTouchPixels * 0.75
                 height:             width
                 sourceSize.width:   width
-                color:              qgcPal.text
+                //color:              qgcPal.text
+                color:              "blue"           //AA changes pencil to red to see
+                //visible:            false
                 fillMode:           Image.PreserveAspectFit
 
                 QGCMouseArea {
@@ -92,7 +99,7 @@ Rectangle {
             y:                          telemetryLayout.y
             width:                      telemetryLayout.width
             height:                     telemetryLayout.height
-            hoverEnabled:               !ScreenTools.isMobile
+            hoverEnabled:               true
             propagateComposedEvents:    true
 
             onClicked: {
@@ -107,7 +114,8 @@ Rectangle {
 
         HorizontalFactValueGrid {
             id:                     valueArea
-            userSettingsGroup:      telemetryBarUserSettingsGroup
+            //userSettingsGroup:      telemetryBarUserSettingsGroup
+            userSettingsGroup:      telemetryBarDefaultSettingsGroup //AA override user prefs
             defaultSettingsGroup:   telemetryBarDefaultSettingsGroup
         }
     }

@@ -14,11 +14,11 @@
 #include "VideoManager.h"
 
 //-----------------------------------------------------------------------------
-MicrohardSettings::MicrohardSettings(QString address_, QObject* parent, bool setEncryptionKey)
+MicrohardSettings::MicrohardSettings(QString address_, QObject* parent, bool configure)
     : MicrohardHandler(parent)
 {
     _address = address_;
-    _setEncryptionKey = setEncryptionKey;
+    _configure = configure;
 }
 
 //-----------------------------------------------------------------------------
@@ -42,17 +42,22 @@ MicrohardSettings::getStatus()
 
 //-----------------------------------------------------------------------------
 void
-MicrohardSettings::setEncryptionKey(QString key)
+//MicrohardSettings::configure(QString power, int channel, int bandwidth)
+MicrohardSettings::configure(QString key, QString power, int channel, int bandwidth)
 {
     if (!_tcpSocket) {
         return;
     }
-    QString cmd = "AT+MWVENCRYPT=1," + key + "\n";
-    _tcpSocket->write(cmd.toStdString().c_str());
-    cmd = "AT&W\n";
+
+    QString cmd = "AT+MWTXPOWER=" + power + "\n";
+    cmd += "AT+MWFREQ900=" + QString::number(channel) + "\n";
+    cmd += "AT+MWVRATE=" + QString::number(bandwidth) + "\n";
+    cmd += "AT+MWDISTANCE=" + key + "\n";
+    cmd += "AT&W\n";
     _tcpSocket->write(cmd.toStdString().c_str());
 
-    qCDebug(MicrohardLog) << "Set encryption key: " << key;
+    //qCDebug(MicrohardLog) << " power: " << power << " channel: " << channel << " bandwidth: " << bandwidth;
+    qCDebug(MicrohardLog) << "Configure key: " << key << " power: " << power << " channel: " << channel << " bandwidth: " << bandwidth;
 }
 
 //-----------------------------------------------------------------------------
@@ -62,6 +67,7 @@ MicrohardSettings::_readBytes()
     if (!_tcpSocket) {
         return;
     }
+    int j;
     QByteArray bytesIn = _tcpSocket->read(_tcpSocket->bytesAvailable());
 
     //qCDebug(MicrohardLog) << "Read bytes: " << bytesIn;
@@ -88,8 +94,21 @@ MicrohardSettings::_readBytes()
     } else if (bytesIn.contains("Login incorrect")) {
         emit connected(-1);
     } else if (bytesIn.contains("Entering")) {
-        if (!loggedIn() && _setEncryptionKey) {
-            qgcApp()->toolbox()->microhardManager()->setEncryptionKey();
+        if (!_configure) {
+            _loggedIn = true;
+            emit connected(1);
+        } else {
+            _tcpSocket->write("at+mssysi\n");
+        }
+    } else if ((j = bytesIn.indexOf("Product")) > 0) {
+        int i = bytesIn.indexOf(": ", j);
+        if (i > 0) {
+            QString product = bytesIn.mid(i + 2, bytesIn.indexOf("\r", i + 3) - (i + 2));
+            qgcApp()->toolbox()->microhardManager()->setProductName(product);
+        }
+        if (!loggedIn() && (_configure || _configureAfterConnect)) {
+            _configureAfterConnect = false;
+            qgcApp()->toolbox()->microhardManager()->configure();
         }
         _loggedIn = true;
         emit connected(1);

@@ -36,15 +36,22 @@ const QVariantList& CustomAutoPilotPlugin::vehicleComponents()
         if (_vehicle) {
             bool showAdvanced = qgcApp()->toolbox()->corePlugin()->showAdvancedUI();
             if (_vehicle->parameterManager()->parametersReady()) {
-					 if (showAdvanced) {
+
                 _airframeComponent = new AirframeComponent(_vehicle, this);
                 _airframeComponent->setupTriggerSignals();                    //AA Having this here instea of below makes it always present
                 _components.append(QVariant::fromValue(reinterpret_cast<VehicleComponent*>(_airframeComponent)));
 
-                    _sensorsComponent = new SensorsComponent(_vehicle, this);
+
+                if (showAdvanced) {
+
+                    //_airframeComponent = new AirframeComponent(_vehicle, this);
+                    //_airframeComponent->setupTriggerSignals();                                //AA Disable here and to ALWAYS (above)
+                    //_components.append(QVariant::fromValue(reinterpret_cast<VehicleComponent*>(_airframeComponent)));
+
+                    /*_sensorsComponent = new SensorsComponent(_vehicle, this);                 //AA Disable here and add to basic
                     _sensorsComponent->setupTriggerSignals();
                     _components.append(QVariant::fromValue(reinterpret_cast<VehicleComponent*>(_sensorsComponent)));
-
+                    */
                     _radioComponent = new PX4RadioComponent(_vehicle, this);
                     _radioComponent->setupTriggerSignals();
                     _components.append(QVariant::fromValue(reinterpret_cast<VehicleComponent*>(_radioComponent)));
@@ -81,6 +88,10 @@ const QVariantList& CustomAutoPilotPlugin::vehicleComponents()
                 _safetyComponent = new SafetyComponent(_vehicle, this);
                 _safetyComponent->setupTriggerSignals();
                 _components.append(QVariant::fromValue(reinterpret_cast<VehicleComponent*>(_safetyComponent)));
+
+                _sensorsComponent = new SensorsComponent(_vehicle, this);                                           //AA adds senors to basic UI
+                _sensorsComponent->setupTriggerSignals();
+                _components.append(QVariant::fromValue(reinterpret_cast<VehicleComponent*>(_sensorsComponent)));
 
                 if (showAdvanced) {
                     _tuningComponent = new PX4TuningComponent(_vehicle, this);

@@ -59,7 +59,10 @@ Rectangle {
         anchors.verticalCenter:     parent.verticalCenter
         horizontalAlignment:        Text.AlignHCenter
         text:                       confirmText
-        color:                      qgcPal.buttonText
+        color:                      qgcPal.buttonText                                 //AA - changes slider text color
+        //color:      (qgcPal.globalTheme === QGCPalette.Light ? "black" : "black")          //AA - changes slider text color
+        font.bold:                  true //AA - make the font bold
+        font.pixelSize: 16
     }
 
     Rectangle {

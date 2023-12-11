@@ -126,12 +126,47 @@ Item {
         guidedValueSlider:             _guidedValueSlider
     }*/
 
+    Rectangle {
+       // color: "lightgrey" // Light grey color for the outer rectangle
+
+            id: guidedActionConfirmContainer
+            //width: parent.width / 2.5
+            //height:  parent.width / 1.9
+           //width: 160
+           //height:  50                                     //AA This whole area is the location of the slider at the bottom
+           radius: 50
+            //color: "green" // Set to transparent to avoid overlapping colors
+
+            // Position the container
+          anchors.margins:                      _margins
+          //anchors.bottomMargin:                 (ScreenTools.defaultFontPixelHeight * 7)  //AA - This keeps the slider anchored
+          //anchors.bottomMargin:                 200  //AA - This keeps the slider anchored
+          anchors.bottom:                       parent.bottom
+
+          anchors.horizontalCenter:             parent.horizontalCenter //AA to get centered
+          anchors.horizontalCenterOffset:       -140  //AA to get centered
+          z:                                    QGroundControl.zOrderTopMost
+
+
+/*
+          GuidedActionConfirm {
+                id: guidedActionConfirm
+                Layout.fillWidth:   true
+                anchors.fill: parent
+                guidedController: _guidedController
+                altitudeSlider: _guidedAltSlider
+
+            }
+*/
+        }
+
+
     GuidedActionList {
         id:                         guidedActionList
         anchors.margins:            _margins
         anchors.bottom:             parent.bottom
         anchors.horizontalCenter:   parent.horizontalCenter
-        z:                          QGroundControl.zOrderTopMost
+        //z:                          QGroundControl.zOrderTopMost
         guidedController:           _guidedController
     }
 

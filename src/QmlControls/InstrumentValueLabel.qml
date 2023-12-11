@@ -28,15 +28,16 @@ ColumnLayout {
     property var    _rgFontSizeTightHeights:    [ _tightDefaultFontHeight * _rgFontSizeRatios[0] + 2, _tightDefaultFontHeight * _rgFontSizeRatios[1] + 2, _tightDefaultFontHeight * _rgFontSizeRatios[2] + 2, _tightDefaultFontHeight * _rgFontSizeRatios[3] + 2 ]
     property real   _tightHeight:               _rgFontSizeTightHeights[instrumentValueData.factValueGrid.fontSize]
     property bool   _iconVisible:               instrumentValueData.rangeType === InstrumentValueData.IconSelectRange || instrumentValueData.icon
-    property var    _color:                     instrumentValueData.isValidColor(instrumentValueData.currentColor) ? instrumentValueData.currentColor : qgcPal.text
+    //property var    _color:                     instrumentValueData.isValidColor(instrumentValueData.currentColor) ? instrumentValueData.currentColor : qgcPal.text
+    property var    _color:                    instrumentValueData.isValidColor(instrumentValueData.currentColor) ? instrumentValueData.currentColor : "black" //AA telemetry data color part 1
 
     QGCPalette { id: qgcPal; colorGroupEnabled: enabled }
 
     QGCColoredImage {
         id:                         valueIcon
         Layout.alignment:           _verticalOrientation ? Qt.AlignHCenter : Qt.AlignVCenter
-        height:                     _tightHeight * 0.75
-        width:                      _tightHeight * 0.85
+        height:                     _tightHeight * 0.75 //AA control icon size
+        width:                      height
         sourceSize.height:          height
         fillMode:                   Image.PreserveAspectFit
         mipmap:                     true
@@ -76,7 +77,9 @@ ColumnLayout {
     QGCLabel {
         Layout.alignment:   _verticalOrientation ? Qt.AlignHCenter : Qt.AlignVCenter
         height:             _tightHeight
-        font.pointSize:     ScreenTools.smallFontPointSize
+        //font.pointSize:     ScreenTools.smallFontPointSize // AA controls font size
+        font.pointSize:     ScreenTools.smallFontPointSize * 1.25 // AA controls font size
+        font.bold:          true //AA changes font to bold
         text:               instrumentValueData.text
         color:              _color
         opacity:            instrumentValueData.currentOpacity

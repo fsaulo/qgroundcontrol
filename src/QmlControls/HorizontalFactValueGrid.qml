@@ -119,7 +119,8 @@ T.HorizontalFactValueGrid {
 
                 QGCButton {
                     Layout.fillHeight:      true
-                    Layout.preferredHeight: ScreenTools.minTouchPixels
+                    //Layout.preferredHeight: ScreenTools.minTouchPixels
+                    Layout.preferredHeight: 30          //AA added to make button smaller
                     Layout.preferredWidth:  parent.width
                     text:                   qsTr("+")
                     enabled:                (_root.width + (2 * (_rowButtonWidth + _margins))) < screen.width
@@ -128,7 +129,8 @@ T.HorizontalFactValueGrid {
 
                 QGCButton {
                     Layout.fillHeight:      true
-                    Layout.preferredHeight: ScreenTools.minTouchPixels
+                    //Layout.preferredHeight: ScreenTools.minTouchPixels
+                    Layout.preferredHeight: 30          //AA added to make button smaller
                     Layout.preferredWidth:  parent.width
                     text:                   qsTr("-")
                     enabled:                _root.columns.count > 1
@@ -141,7 +143,8 @@ T.HorizontalFactValueGrid {
             Layout.preferredHeight: ScreenTools.minTouchPixels / 2
             Layout.fillWidth:       true
             spacing:                1
-            visible:                settingsUnlocked
+            //visible:                settingsUnlocked //AA removed ability for telemetry bar to increase vertically
+            visible:                false       //AA
             enabled:                settingsUnlocked
 
             QGCButton {

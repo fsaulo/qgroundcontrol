@@ -60,7 +60,7 @@ Item {
         topEdgeCenterInset:     mapScale.topEdgeCenterInset
         topEdgeRightInset:      instrumentPanel.topEdgeRightInset
         bottomEdgeLeftInset:    virtualJoystickMultiTouch.visible ? virtualJoystickMultiTouch.bottomEdgeLeftInset : parentToolInsets.bottomEdgeLeftInset
-        bottomEdgeCenterInset:  telemetryPanel.bottomEdgeCenterInset
+        //bottomEdgeCenterInset:  telemetryPanel.bottomEdgeCenterInset //AA - disabled bec disabled below
         bottomEdgeRightInset:   virtualJoystickMultiTouch.visible ? virtualJoystickMultiTouch.bottomEdgeRightInset : parentToolInsets.bottomEdgeRightInset
     }
 
@@ -162,14 +162,17 @@ Item {
 
     TelemetryValuesBar {
         id:                 telemetryPanel
-        x:                  recalcXPosition()
-        anchors.margins:    _toolsMargin
+        //x:                  recalcXPosition()
+	//y:			recalcYPosition()
 
-        property real bottomEdgeCenterInset: 0
-        property real rightEdgeCenterInset: 0
+        //anchors.margins:    _toolsMargin
+	anchors.bottom: parent.bottom           //AA added this locks the telemetry into the right and bottom
+        anchors.right: parent.right
+	// property real bottomEdgeCenterInset: 0
+        //property real rightEdgeCenterInset: 0
 
         // States for custom layout support
-        states: [
+        /*states: [
             State {
                 name: "bottom"
                 when: telemetryPanel.bottomMode
@@ -225,7 +228,7 @@ Item {
                     rightEdgeCenterInset: visible ? parent.width - x : 0
                 }
             }
-        ]
+        ]*/
 
         function recalcXPosition() {
             // First try centered
@@ -241,6 +244,23 @@ Item {
                 return parentToolInsets.leftEdgeBottomInset + _toolsMargin
             }
         }
+/*
+        function recalcYPosition(){
+            var top = _toolsMargin
+            var bottom = _root.height
+
+            if( _location === 0 )
+            {
+                return bottom - _toolsMargin - bottomInset
+            }
+            else if( _location === 1)
+            {
+                return top
+            }
+        }
+*/
+   
+        
     }
 
     //-- Virtual Joystick
@@ -251,8 +271,8 @@ Item {
         height:                     Math.min(parent.height * 0.25, ScreenTools.defaultFontPixelWidth * 16)
         visible:                    _virtualJoystickEnabled && !QGroundControl.videoManager.fullScreen && !(_activeVehicle ? _activeVehicle.usingHighLatencyLink : false)
         anchors.bottom:             parent.bottom
-        anchors.bottomMargin:       parentToolInsets.leftEdgeBottomInset + ScreenTools.defaultFontPixelHeight * 2
-        anchors.horizontalCenter:   parent.horizontalCenter
+       // anchors.bottomMargin:       parentToolInsets.leftEdgeBottomInset + ScreenTools.defaultFontPixelHeight * 2
+       // anchors.horizontalCenter:   parent.horizontalCenter
         source:                     "qrc:/qml/VirtualJoystick.qml"
         active:                     _virtualJoystickEnabled && !(_activeVehicle ? _activeVehicle.usingHighLatencyLink : false)
 

@@ -137,7 +137,8 @@ Rectangle {
 
                                 QGCLabel {
                                     text:       qsTr("Telemetry Values Bar Location")
-                                    visible:    true
+                                    //visible:    true
+                                    visible:    false //AA
                                 }
 
                                 FactComboBox {
@@ -145,7 +146,8 @@ Rectangle {
                                     Layout.preferredWidth:  _comboFieldWidth
                                     indexModel:             false
                                     fact:                   _telemValuesBarLocation
-                                    visible:                true
+                                   // visible:                true
+                                    visible:    false //AA
 
                                     property Fact   _telemValuesBarLocation:    QGroundControl.settingsManager.appSettings.telementryValuesBarLocation
                                 }
@@ -747,7 +749,8 @@ Rectangle {
                                 FactCheckBox {
                                     text:       qsTr("Enable Remote ID")
                                     fact:       _remoteIDEnable
-                                    visible:    _remoteIDEnable.visible
+                                    //visible:    _remoteIDEnable.visible //AA chaged
+                                    visible:    QGroundControl.corePlugin.showAdvancedUI //AA
                                     property Fact _remoteIDEnable: QGroundControl.settingsManager.remoteIDSettings.enable
                                 }
                             }
@@ -855,14 +858,15 @@ Rectangle {
                                     id:     autoConnectRepeater
                                     model:  [ QGroundControl.settingsManager.autoConnectSettings.autoConnectPixhawk,
                                         QGroundControl.settingsManager.autoConnectSettings.autoConnectSiKRadio,
-                                        QGroundControl.settingsManager.autoConnectSettings.autoConnectPX4Flow,
-                                        QGroundControl.settingsManager.autoConnectSettings.autoConnectLibrePilot,
+                                        //QGroundControl.settingsManager.autoConnectSettings.autoConnectPX4Flow,    //AA changed
+                                        //QGroundControl.settingsManager.autoConnectSettings.autoConnectLibrePilot, //AA changed
                                         QGroundControl.settingsManager.autoConnectSettings.autoConnectUDP,
                                         QGroundControl.settingsManager.autoConnectSettings.autoConnectRTKGPS,
-                                        QGroundControl.settingsManager.autoConnectSettings.autoConnectZeroConf,
+                                        //QGroundControl.settingsManager.autoConnectSettings.autoConnectZeroConf,   //AA changed
                                     ]
 
-                                    property var names: [ qsTr("Pixhawk"), qsTr("SiK Radio"), qsTr("PX4 Flow"), qsTr("LibrePilot"), qsTr("UDP"), qsTr("RTK GPS"), qsTr("Zero-Conf") ]
+                                    //property var names: [ qsTr("Pixhawk"), qsTr("SiK Radio"), qsTr("PX4 Flow"), qsTr("LibrePilot"), qsTr("UDP"), qsTr("RTK GPS"), qsTr("Zero-Conf") ] //AA changed
+                                    property var names: [ qsTr("Pixhawk"), qsTr("SiK Radio"), qsTr("UDP"), qsTr("RTK GPS") ] //AA added
 
                                     FactCheckBox {
                                         text:       autoConnectRepeater.names[index]
