@@ -27,8 +27,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-        with:
-          submodules: recursive
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
 
       - name: Get all tags for correct version determination
         working-directory:  ${{ github.workspace }}
