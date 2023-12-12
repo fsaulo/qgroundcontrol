@@ -291,9 +291,11 @@ Rectangle {
             SubMenuButton {
                 setupIndicator:     false
                 exclusiveGroup:     setupButtonGroup
+                //visible:            QGroundControl.multiVehicleManager.parameterReadyVehicleAvailable &&
+                 //                   !QGroundControl.multiVehicleManager.activeVehicle.usingHighLatencyLink &&     //AA Makes parameters always visible and not depend on advancedUI
+                   //                 _corePlugin.showAdvancedUI
                 visible:            QGroundControl.multiVehicleManager.parameterReadyVehicleAvailable &&
-                                    !QGroundControl.multiVehicleManager.activeVehicle.usingHighLatencyLink &&
-                                    _corePlugin.showAdvancedUI
+                                                    !QGroundControl.multiVehicleManager.activeVehicle.usingHighLatencyLink//AA Makes parameters always visible and not depend on advancedUI
                 text:               qsTr("Parameters")
                 Layout.fillWidth:   true
                 onClicked:          showPanel(this, "SetupParameterEditor.qml")

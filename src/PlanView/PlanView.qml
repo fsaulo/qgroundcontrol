@@ -469,7 +469,8 @@ Item {
                     vehicle:        object
                     coordinate:     object.coordinate
                     map:            editorMap
-                    size:           ScreenTools.defaultFontPixelHeight * 3
+                    //size:           ScreenTools.defaultFontPixelHeight * 3
+                    size:           ScreenTools.defaultFontPixelHeight * 6 /// AA - increases Plane icon size. 3 is standard.
                     z:              QGroundControl.zOrderMapItems - 1
                 }
             }

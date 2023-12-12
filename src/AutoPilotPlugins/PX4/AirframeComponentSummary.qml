@@ -22,10 +22,12 @@ Item {
         VehicleSummaryRow {
             labelText: qsTr("System ID")
             valueText: sysIdFact ? sysIdFact.valueString : ""
+            visible: false  //AA no need to see
         }
         VehicleSummaryRow {
             labelText: qsTr("Airframe type")
             valueText: autoStartSet ? controller.currentAirframeType : qsTr("Setup required")
+            visible: false //AA no need to see that it is a plane...
         }
         VehicleSummaryRow {
             labelText: qsTr("Vehicle")

@@ -93,13 +93,16 @@ Rectangle {
         id:                         mainLayout
         //anchors.horizontalCenter:   parent.horizontalCenter
         //anchors.centerIn:           parent //AA added                     //AA location of slider
+        anchors.bottom:               parent.bottom //AA added
+        anchors.bottomMargin:           -100                  //AA added          vertically CENTERS slider at bottom
         //anchors.horizontalCenter:   parent.width / 2
         //anchors.verticalCenter:     parent.height / 2
         spacing:                    _margins
-
+/*
         Rectangle {
             width: 450                      //AA width of box where text is
-            height:  30                     //AA height of box where text is
+            height:  30                    //AA height of box where text is
+            Layout.alignment: Qt.AlignVCenter
             //Layout.alignment: Qt.AlignHCenter
             //Layout.alignment: Qt.AlignCenter
             //Layout.leftMargin: -50
@@ -114,7 +117,7 @@ Rectangle {
             //z:   QGroundControl.zOrderVehicles
             //z: QGroundControl.zOrderWaypointLines
 
-
+*/
 
         QGCLabel {
             id:                     messageText
@@ -122,12 +125,16 @@ Rectangle {
             //Layout.alignment: Qt.AlignVCenter
             font.bold:              true                            //AA added bold
             font.pointSize:         ScreenTools.mediumFontPointSize //AA Increases font size
-            anchors.horizontalCenter: parent.horizontalCenter       //AA centers text horizontally
+            //anchors.horizontalCenter: parent.horizontalCenter       //AA centers text horizontally
+            //Layout.alignment:   Qt.AlignVCenter | Qt.AlignHCenter      //AA centers text horizontally and vertically
+            horizontalAlignment:    Text.AlignHCenter
+
             //Layout.alignment:       parent.horizontalCenter
             //horizontalAlignment:    Text.AlignHCenter
             //verticalAlignment:       Text.AlignVCenter
             //Layout.alignment:       parent.verticalCenter
-            anchors.verticalCenter: parent.verticalCenter           //AA centers text verically
+            //anchors.verticalCenter: parent.verticalCenter           //AA centers text verically
+
             Layout.topMargin: -50          //AA to get centered
             wrapMode:               Text.WordWrap
             //color: "black" //AA controls text color above slider
@@ -135,11 +142,12 @@ Rectangle {
 
             Rectangle {
                 width: Math.max(messageText.width * 1.2, 420)
-                height: messageText.height + mainLayout.height
+                height: messageText.height + mainLayout.height * 1.4
                 //color: "red"
                 color:  Qt.rgba(9,9,9,.55)
                 radius: 30
                 anchors.horizontalCenter: parent.horizontalCenter
+                anchors.horizontalCenterOffset: -10                 //AA moves box above slider left/right
                 z: _fullItemZorder - 1
 
             }
@@ -155,13 +163,14 @@ Rectangle {
 
         RowLayout {
             //Layout.alignment:       Qt.AlignHCenter
+            Layout.fillWidth:   true
             spacing:                ScreenTools.defaultFontPixelWidth
 
             SliderSwitch {
                 id:                 slider
                 confirmText:        ScreenTools.isMobile ? qsTr("Slide to confirm") : qsTr("Slide or hold spacebar")
-                //Layout.fillWidth:   true
-		 Layout.minimumWidth:    Math.max(implicitWidth, ScreenTools.defaultFontPixelWidth * 30)
+                Layout.fillWidth:   true
+                Layout.minimumWidth:    Math.max(implicitWidth, ScreenTools.defaultFontPixelWidth * 30)
 
                 onAccept: {
                     _root.visible = false
@@ -180,7 +189,7 @@ Rectangle {
             }
 
             Rectangle {
-                height: slider.height * 0.75
+                height: slider.height * 0.75 //AA X button on right of slider
                 width:  height
                 radius: height / 2
                 color:  qgcPal.primaryButton
@@ -202,4 +211,4 @@ Rectangle {
     }
 }
 
-}
+//}

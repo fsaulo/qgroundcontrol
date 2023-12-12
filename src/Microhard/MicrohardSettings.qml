@@ -32,6 +32,7 @@ Rectangle {
     color:              qgcPal.window
     anchors.fill:       parent
     anchors.margins:    ScreenTools.defaultFontPixelWidth
+    radius:             10      //AA added
 
     property real _labelWidth:                  ScreenTools.defaultFontPixelWidth * 26
     property real _valueWidth:                  ScreenTools.defaultFontPixelWidth * 20
@@ -70,6 +71,7 @@ Rectangle {
                     color:                      qgcPal.windowShade
                     anchors.margins:            ScreenTools.defaultFontPixelWidth
                     anchors.horizontalCenter:   parent.horizontalCenter
+                    radius:             10      //AA added
                     Row {
                         id:                 generalRow
                         spacing:            ScreenTools.defaultFontPixelWidth * 4
@@ -106,6 +108,7 @@ Rectangle {
                     visible:                    _microhardEnabled
                     anchors.margins:            ScreenTools.defaultFontPixelWidth
                     anchors.horizontalCenter:   parent.horizontalCenter
+                    radius:             10      //AA added
                     Column {
                         id:                     statusCol
                         spacing:                ScreenTools.defaultFontPixelHeight * 0.5
@@ -184,6 +187,7 @@ Rectangle {
                     visible:                    _microhardEnabled
                     anchors.margins:            ScreenTools.defaultFontPixelWidth
                     anchors.horizontalCenter:   parent.horizontalCenter
+                    radius:             10      //AA added
                     Column {
                         id:                     ipSettingsCol
                         spacing:                ScreenTools.defaultFontPixelHeight * 0.5

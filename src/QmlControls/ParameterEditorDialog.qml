@@ -36,7 +36,7 @@ QGCPopupDialog {
     property real   _editFieldWidth:            ScreenTools.defaultFontPixelWidth * 20
     property bool   _longDescriptionAvailable:  fact.longDescription != ""
     property bool   _editingParameter:          fact.componentId != 0
-    property bool   _allowForceSave:            QGroundControl.corePlugin.showAdvancedUI || !_editingParameter
+    property bool   _allowForceSave:            QGroundControl.corePlugin.showAdvancedUI || !QGroundControl.corePlugin.showAdvancedUI || !_editingParameter //AA edit for non advenced mode too
     property bool   _allowDefaultReset:         fact.defaultValueAvailable && (QGroundControl.corePlugin.showAdvancedUI || !_editingParameter)
     property bool   _showCombo:                 fact.enumStrings.length !== 0 && fact.bitmaskStrings.length === 0 && !validate
 

@@ -26,7 +26,8 @@ import QGroundControl.FactControls      1.0
 Rectangle {
     height:     mainLayout.height + (_margins * 2)
     color:      Qt.rgba(qgcPal.window.r, qgcPal.window.g, qgcPal.window.b, 0.5)
-    radius:     _margins
+    //radius:     _margins
+    radius:     20      //AA added
     visible:    (_mavlinkCamera || _videoStreamAvailable || _simpleCameraAvailable) && multiVehiclePanelSelector.showSingleVehiclePanel
 
     property real   _margins:                                   ScreenTools.defaultFontPixelHeight / 2

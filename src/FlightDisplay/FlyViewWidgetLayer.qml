@@ -108,8 +108,11 @@ Item {
 
     GuidedActionConfirm {
         anchors.margins:            _toolsMargin
-        anchors.top:                parent.top
+        //anchors.top:                parent.top
+        anchors.bottom:             parent.bottom //AA changed for slider to be at bottom
+        anchors.bottomMargin:       200
         anchors.horizontalCenter:   parent.horizontalCenter
+        anchors.horizontalCenterOffset:       -175  //AA        CENTER HORIZONTALLY THE SLIDER
         z:                          QGroundControl.zOrderTopMost
         guidedController:           _guidedController
         guidedValueSlider:          _guidedValueSlider

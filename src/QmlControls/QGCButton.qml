@@ -18,7 +18,8 @@ Button {
     property real   pointSize:      ScreenTools.defaultFontPointSize    ///< Point size for button text
     property bool   showBorder:     qgcPal.globalTheme === QGCPalette.Light
     property bool   iconLeft:       false
-    property real   backRadius:     0
+    //property real   backRadius:     0
+    property real   backRadius:     10      //AA added Make button round
     property real   heightFactor:   0.5
     property string iconSource
 

@@ -118,6 +118,7 @@ Rectangle {
                 color:          qgcPal.windowShade
                 anchors.margins: ScreenTools.defaultFontPixelWidth
                 anchors.horizontalCenter: parent.horizontalCenter
+                radius:             10      //AA added
                 Column {
                     id:         gcsColumn
                     spacing:    _columnSpacing
@@ -212,6 +213,7 @@ Rectangle {
                 anchors.horizontalCenter:   parent.horizontalCenter
                 //visible:                    _showAPMStreamRates
                 visible:                      false         //AA disable APM stream rates
+                radius:             10      //AA added
 
                 ColumnLayout {
                     id:                 streamRatesColumn
@@ -300,6 +302,7 @@ Rectangle {
                 color:          qgcPal.windowShade
                 anchors.margins: ScreenTools.defaultFontPixelWidth
                 anchors.horizontalCenter: parent.horizontalCenter
+                radius:             10      //AA added
                 Column {
                     id:         mavStatusColumn
                     width:      gcsColumn.width
@@ -389,6 +392,7 @@ Rectangle {
                 anchors.margins: ScreenTools.defaultFontPixelWidth
                 anchors.horizontalCenter: parent.horizontalCenter
                 visible:        _showMavlinkLog && _isPX4
+                radius:             10      //AA added
                 Column {
                     id:         mavlogColumn
                     width:      gcsColumn.width
@@ -438,8 +442,8 @@ Rectangle {
                 height:             logLabel.height
                 anchors.margins:    ScreenTools.defaultFontPixelWidth
                 anchors.horizontalCenter: parent.horizontalCenter
-                visible:            _showMavlinkLog && _isPX4
-		visible:            false //AA Updated
+        //        visible:            _showMavlinkLog && _isPX4
+                visible:            false //AA Updated
                 QGCLabel {
                     id:             logLabel
                     text:           qsTr("MAVLink 2.0 Log Uploads (PX4 Pro Only)")
@@ -453,6 +457,7 @@ Rectangle {
                 anchors.margins: ScreenTools.defaultFontPixelWidth
                 anchors.horizontalCenter: parent.horizontalCenter
                 //visible:        _showMavlinkLog && _isPX4
+                radius:             10      //AA added
 		visible:            false //AA Updated
                 Column {
                     id:         logColumn
@@ -693,6 +698,7 @@ Rectangle {
                 anchors.margins: ScreenTools.defaultFontPixelWidth
                 anchors.horizontalCenter: parent.horizontalCenter
                 visible:        _showMavlinkLog
+                radius:             10      //AA added
                 Column {
                     id:         logFilesColumn
                     spacing:    _columnSpacing * 4
@@ -705,6 +711,7 @@ Rectangle {
                         color:          qgcPal.window
                         border.color:   qgcPal.text
                         border.width:   0.5
+                        radius:             10      //AA added
                         QGCListView {
                             width:          ScreenTools.defaultFontPixelWidth  * 56
                             height:         ScreenTools.defaultFontPixelHeight * 12

@@ -105,6 +105,7 @@ Rectangle {
                         color:      qgcPal.windowShade
                         visible:    modelData.summaryQmlSource.toString() !== ""
                         border.width: 1
+                        radius:         10  //AA adds radius to summary back ractangles
                         border.color: qgcPal.text
                         Component.onCompleted: {
                             border.color = Qt.rgba(border.color.r, border.color.g, border.color.b, 0.1)

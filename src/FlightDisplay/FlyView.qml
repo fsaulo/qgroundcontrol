@@ -74,7 +74,7 @@ Item {
     }
 
     FlyViewWidgetLayer {
-        id:                     widgetLayer
+        id:                     widgetLayer             //AA This cotrols both the slider and top altitude. cant alter here or both get changed.
         anchors.top:            parent.top
         anchors.bottom:         parent.bottom
         anchors.left:           parent.left
@@ -89,6 +89,7 @@ Item {
     FlyViewCustomLayer {
         id:                 customOverlay
         anchors.fill:       widgetLayer
+        anchors.leftMargin: -25
         z:                  _fullItemZorder + 2
         parentToolInsets:   widgetLayer.totalToolInsets
         mapControl:         _mapControl
@@ -114,59 +115,57 @@ Item {
         missionController:  _missionController
         actionList:         _guidedActionList
         guidedValueSlider:     _guidedValueSlider
+
     }
 
     /*GuidedActionConfirm {
         id:                         guidedActionConfirm
         anchors.margins:            _margins
-        anchors.bottom:             parent.bottom
-        anchors.horizontalCenter:   parent.horizontalCenter
+ 	x:      parent.width / 2.5              //AA added this and enabled this whole section
+        y:      parent.width / 1.9              //AA controls the slide bar to confirm/start missions/etc
+        //anchors.bottom:             parent.bottom
+        //anchors.horizontalCenter:   parent.horizontalCenter
         z:                          QGroundControl.zOrderTopMost
         guidedController:           _guidedController
         guidedValueSlider:             _guidedValueSlider
     }*/
+/*
+Rectangle {
 
-    Rectangle {
-       // color: "lightgrey" // Light grey color for the outer rectangle
-
+        //AA This whole area is the location of the slider at the bottom
             id: guidedActionConfirmContainer
             //width: parent.width / 2.5
             //height:  parent.width / 1.9
            //width: 160
            //height:  50                                     //AA This whole area is the location of the slider at the bottom
            radius: 50
-            //color: "green" // Set to transparent to avoid overlapping colors
-
-            // Position the container
           anchors.margins:                      _margins
           //anchors.bottomMargin:                 (ScreenTools.defaultFontPixelHeight * 7)  //AA - This keeps the slider anchored
-          //anchors.bottomMargin:                 200  //AA - This keeps the slider anchored
+          anchors.bottomMargin:                 -200  //AA - This keeps the slider anchored
           anchors.bottom:                       parent.bottom
-
           anchors.horizontalCenter:             parent.horizontalCenter //AA to get centered
           anchors.horizontalCenterOffset:       -140  //AA to get centered
           z:                                    QGroundControl.zOrderTopMost
 
 
-/*
-          GuidedActionConfirm {
+
+          GuidedActionConfirm {                     //AA Puts the slider at the bottom
                 id: guidedActionConfirm
                 Layout.fillWidth:   true
                 anchors.fill: parent
                 guidedController: _guidedController
-                altitudeSlider: _guidedAltSlider
+                guidedValueSlider: _guidedValueSlider
+
 
             }
-*/
-        }
-
-
+        }       */
     GuidedActionList {
         id:                         guidedActionList
-        anchors.margins:            _margins
-        anchors.bottom:             parent.bottom
+        //anchors.margins:            _margins
+        //anchors.bottom:             parent.bottom
+        //anchors.bottomMargin:   100
         anchors.horizontalCenter:   parent.horizontalCenter
-        //z:                          QGroundControl.zOrderTopMost
+        z:                          QGroundControl.zOrderTopMost
         guidedController:           _guidedController
     }
 

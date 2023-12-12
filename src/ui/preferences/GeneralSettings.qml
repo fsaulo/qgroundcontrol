@@ -90,6 +90,7 @@ Rectangle {
                         color:                  qgcPal.windowShade
                         visible:                flyViewSectionLabel.visible
                         Layout.fillWidth:       true
+                        radius:             10      //AA added
 
                         ColumnLayout {
                             id:                         flyViewCol
@@ -140,7 +141,7 @@ Rectangle {
                                     //visible:    true
                                     visible:    false //AA
                                 }
-
+/*
                                 FactComboBox {
                                     id:                     _telemValuesBarLocationCombobox
                                     Layout.preferredWidth:  _comboFieldWidth
@@ -149,8 +150,8 @@ Rectangle {
                                    // visible:                true
                                     visible:    false //AA
 
-                                    property Fact   _telemValuesBarLocation:    QGroundControl.settingsManager.appSettings.telementryValuesBarLocation
-                                }
+                                    //property Fact   _telemValuesBarLocation:    QGroundControl.settingsManager.appSettings.telementryValuesBarLocation
+                                }*/
                             }
 
                             RowLayout {
@@ -172,7 +173,8 @@ Rectangle {
 
                             FactCheckBox {
                                 text:       qsTr("Use Vertical Instrument Panel")
-                                visible:    _alternateInstrumentPanel.visible
+                                //visible:    _alternateInstrumentPanel.visible
+                                visible:       false                //AA added
                                 fact:       _alternateInstrumentPanel
 
                                 property Fact _alternateInstrumentPanel: QGroundControl.settingsManager.flyViewSettings.alternateInstrumentPanel
@@ -180,7 +182,8 @@ Rectangle {
 
                             FactCheckBox {
                                 text:       qsTr("Show additional heading indicators on Compass")
-                                visible:    _showAdditionalIndicatorsCompass.visible
+                                //visible:    _showAdditionalIndicatorsCompass.visible
+                                visible:       false                //AA added
                                 fact:       _showAdditionalIndicatorsCompass
 
                                 property Fact _showAdditionalIndicatorsCompass: QGroundControl.settingsManager.flyViewSettings.showAdditionalIndicatorsCompass
@@ -188,7 +191,8 @@ Rectangle {
 
                             FactCheckBox {
                                 text:       qsTr("Lock Compass Nose-Up")
-                                visible:    _lockNoseUpCompass.visible
+                                //visible:    _lockNoseUpCompass.visible
+                                visible:       false                //AA added
                                 fact:       _lockNoseUpCompass
 
                                 property Fact _lockNoseUpCompass: QGroundControl.settingsManager.flyViewSettings.lockNoseUpCompass
@@ -211,7 +215,8 @@ Rectangle {
 
                             FactCheckBox {
                                 text:       qsTr("Enable Custom Actions")
-                                visible:    _enableCustomActions.visible
+                                //visible:    _enableCustomActions.visible
+                                visible:       false                //AA added
                                 fact:       _enableCustomActions
 
                                 property Fact _enableCustomActions: QGroundControl.settingsManager.flyViewSettings.enableCustomActions
@@ -454,6 +459,7 @@ Rectangle {
                         color:                  qgcPal.windowShade
                         visible:                planViewSectionLabel.visible
                         Layout.fillWidth:       true
+                        radius:             10      //AA added
 
                         ColumnLayout {
                             id:                         planViewCol
@@ -505,6 +511,7 @@ Rectangle {
                         color:                  qgcPal.windowShade
                         visible:                miscSectionLabel.visible
                         Layout.fillWidth:       true
+                        radius:             10      //AA added
 
                         GridLayout {
                             id:                         unitsGrid
@@ -542,6 +549,7 @@ Rectangle {
                         Layout.fillWidth:       true
                         color:                  qgcPal.windowShade
                         visible:                miscSectionLabel.visible
+                        radius:             10      //AA added
 
                         Item {
                             id:                 comboGridItem
@@ -798,6 +806,7 @@ Rectangle {
                         color:                  qgcPal.windowShade
                         Layout.fillWidth:       true
                         visible:                promptSaveLog._telemetrySave.visible || logIfNotArmed._telemetrySaveNotArmed.visible || promptSaveCsv._saveCsvTelemetry.visible
+                        radius:             10      //AA added
                         ColumnLayout {
                             id:                         loggingCol
                             anchors.margins:            _margins
@@ -843,6 +852,7 @@ Rectangle {
                         color:                  qgcPal.windowShade
                         visible:                autoConnectSectionLabel.visible
                         Layout.fillWidth:       true
+                        radius:             10      //AA added
 
                         ColumnLayout {
                             id:                 autoConnectCol
@@ -960,6 +970,7 @@ Rectangle {
                         color:                  qgcPal.windowShade
                         visible:                rtkSectionLabel.visible
                         Layout.fillWidth:       true
+                        radius:             10      //AA added
 
                         GridLayout {
                             id:                         rtkGrid
@@ -1094,6 +1105,7 @@ Rectangle {
                         color:                  qgcPal.windowShade
                         visible:                adsbSectionLabel.visible
                         Layout.fillWidth:       true
+                        radius:             10      //AA added
 
                         QGCLabel {
                             id:                 warningLabel
@@ -1158,6 +1170,7 @@ Rectangle {
                         Layout.fillWidth:       true
                         color:                  qgcPal.windowShade
                         visible:                brandImageSectionLabel.visible
+                        radius:             10      //AA added
 
                         GridLayout {
                             id:                 brandImageGrid

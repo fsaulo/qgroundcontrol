@@ -93,11 +93,11 @@ Item {
     //-- Heading Indicator
     Rectangle {
         id:                         compassBar
-        visible:                    false // AA hides it
         height:                     ScreenTools.defaultFontPixelHeight * 1.5
         width:                      ScreenTools.defaultFontPixelWidth  * 50
-        color:                      "#DEDEDE"
-        radius:                     2
+        //color:                      "#DEDEDE"
+        color:                 Qt.rgba(9,9,9,.55) // AA changed
+        radius:                     10 //AA changed
         clip:                       true
         anchors.top:                headingIndicator.bottom
         anchors.topMargin:          -headingIndicator.height / 2
@@ -115,7 +115,8 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 x:              visible ? ((modelData * (compassBar.width / 360)) - (width * 0.5)) : 0
                 visible:        _angle % 45 == 0
-                color:          "#75505565"
+                //color:          "#75505565"
+                color:              "black"
                 font.pointSize: ScreenTools.smallFontPointSize
                 text: {
                     switch(_angle) {
@@ -135,7 +136,6 @@ Item {
     }
     Rectangle {
         id:                         headingIndicator //AA added - rectangle at top by compass bar
-        visible:                    false
         height:                     ScreenTools.defaultFontPixelHeight
         width:                      ScreenTools.defaultFontPixelWidth * 4
         color:                      qgcPal.windowShadeDark
@@ -151,7 +151,6 @@ Item {
     }
     Image {
         id:                         compassArrowIndicator
-        visible:                    false
         height:                     _indicatorsHeight
         width:                      height
         source:                     "/custom/img/compass_pointer.svg"
@@ -162,7 +161,7 @@ Item {
         anchors.horizontalCenter:   parent.horizontalCenter
     }
 
-    Rectangle { // AA - controls the rectangle of the compass in bottom right
+    Rectangle {// AA - controls the rectangle of the compass in bottom right
         id:                     compassBackground
         anchors.bottom:         attitudeIndicator.bottom
         anchors.right:          attitudeIndicator.left
@@ -192,9 +191,8 @@ Item {
             anchors.top:                compassBezel.top
             anchors.topMargin:          -height / 2
             anchors.horizontalCenter:   compassBezel.horizontalCenter
-            width:                      northLabel.contentWidth * 2 //AA added
+            width:                      northLabel.contentWidth *2 //AA added
             height:                     northLabel.contentHeight * 1 //AA added
-            //height:                     northLabel.contentHeight * 1.5
             radius:                     ScreenTools.defaultFontPixelWidth  * 0.25
             color:                      qgcPal.windowShade
 
@@ -230,10 +228,9 @@ Item {
             anchors.horizontalCenter:   compassBezel.horizontalCenter
             width:                      headingLabel.contentWidth * 3 //AA added
             height:                     headingLabel.contentHeight * 1 //AA added
-            //height:                     headingLabel.contentHeight * 1.5
+	    //height:                     headingLabel.contentHeight * 1.5
             radius:                     ScreenTools.defaultFontPixelWidth  * 0.25
             color:                      qgcPal.windowShade
-
 
             QGCLabel {
                 id:                 headingLabel
@@ -247,13 +244,12 @@ Item {
 
     Rectangle {
         id:                     attitudeIndicator
-        anchors.bottomMargin:   _toolsMargin + 62 //AA used if you want clearance for the telemetry bar
-        //anchors.bottomMargin:   _toolsMargin //AA if you want the attitude to be o the bottom
-        //anchors.rightMargin:    _toolsMargin
+        anchors.bottomMargin:   _toolsMargin + parentToolInsets.bottomEdgeRightInset + 62 //AA used if you want clearance for the telemetry bar
+        anchors.rightMargin:    _toolsMargin
         anchors.bottom:         parent.bottom
         anchors.right:          parent.right
         //height:                 ScreenTools.defaultFontPixelHeight * 6
-        height:                 ScreenTools.defaultFontPixelHeight * 12 //AA - increases attitude icon size and compass
+	height:                 ScreenTools.defaultFontPixelHeight * 12 //AA - increases attitude icon size and compass
         width:                  height
         radius:                 height * 0.5
         color:                  qgcPal.windowShade
@@ -263,9 +259,6 @@ Item {
             vehicle:            _activeVehicle
             showHeading:        false
             anchors.centerIn:   parent
-
-
-
         }
     }
 }

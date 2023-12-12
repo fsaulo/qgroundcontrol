@@ -17,14 +17,14 @@
     "type":             "uint32",
     "enumStrings":      "Fixed Wing,Multi-Rotor,VTOL,Rover,Sub,Mavlink Generic",
     "enumValues":       "1,2,20,10,12,0",
-    "default":     2
+    "default":     1
 },
 {
     "name":             "offlineEditingCruiseSpeed",
     "shortDesc": "Offline editing cruise speed",
     "longDesc":  "This value defines the default speed for calculating mission statistics for vehicles which do not support hover or VTOL vehicles in fixed wing mode. It does not modify the flight speed for a specific flight plan.",
     "type":             "double",
-    "default":     15.0,
+    "default":     20.0,
     "min":              1.0,
     "units":            "m/s",
     "decimalPlaces":    2
@@ -74,7 +74,7 @@
     "shortDesc": "Default value for altitude",
     "longDesc":  "This value specifies the default altitude for new items added to a mission.",
     "type":             "double",
-    "default":     50.0,
+    "default":     25.0,
     "min":              0.0,
     "units":            "m",
     "decimalPlaces":    1
@@ -89,7 +89,7 @@
 {
     "name":             "telemetrySaveNotArmed",
     "shortDesc": "Save telemetry log even if vehicle was not armed",
-    "longDesc":  "If this option is enabled a telemtry log will be saved even if vehicle was never armed.",
+    "longDesc":  "If this option is enabled a telemetry log will be saved even if vehicle was never armed.",
     "type":             "bool",
     "default":     false
 },
@@ -136,7 +136,7 @@
     "shortDesc": "Use preflight checklist",
     "longDesc":  "If this option is enabled the preflight checklist will be used.",
     "type":             "bool",
-    "default":     false
+    "default":     true
 },
 {
     "name":             "enforceChecklist",
@@ -260,7 +260,7 @@
     "name":                 "apmStartMavlinkStreams",
     "shortDesc":     "Request start of MAVLink telemetry streams (ArduPilot only)",
     "type":                 "bool",
-    "default":         true,
+    "default":         false,
     "qgcRebootRequired":    true
 },
 {

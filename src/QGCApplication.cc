@@ -135,6 +135,9 @@
 
 #include "QGCMapEngine.h"
 
+/* Applied Aeronautics Version Number */
+#define AA_VERSION "v2.0.3-430"
+
 class FinishVideoInitialization : public QRunnable
 {
 public:
@@ -264,7 +267,7 @@ QGCApplication::QGCApplication(int &argc, char* argv[], bool unitTesting)
         // name. Also we want to run unit tests with clean settings every time.
         applicationName = QStringLiteral("%1_unittest").arg(QGC_APPLICATION_NAME);
     } else {
-#ifdef DAILY_BUILD
+#ifdef DAILY_BUILD_2                //AA by changing this to _2 makes it no longer a Daily Version
         // This gives daily builds their own separate settings space. Allowing you to use daily and stable builds
         // side by side without daily screwing up your stable settings.
         applicationName = QStringLiteral("%1 Daily").arg(QGC_APPLICATION_NAME);
@@ -276,8 +279,8 @@ QGCApplication::QGCApplication(int &argc, char* argv[], bool unitTesting)
     setOrganizationName(QGC_ORG_NAME);
     setOrganizationDomain(QGC_ORG_DOMAIN);
 
-    this->setApplicationVersion(QString(APP_VERSION_STR));
-
+    this->setApplicationVersion(QString(AA_VERSION));
+//	this->setApplicationVersion(QString(APP_VERSION_STR));
     // Set settings format
     QSettings::setDefaultFormat(QSettings::IniFormat);
     QSettings settings;
@@ -367,6 +370,7 @@ QGCApplication::QGCApplication(int &argc, char* argv[], bool unitTesting)
    }
 #endif /* __mobile__ */
 
+//DISABLE VERSION CHECK //AA
    /* _checkForNewVersion(); */
 }
 
