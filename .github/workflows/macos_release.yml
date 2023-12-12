@@ -3,8 +3,7 @@ name: MacOS Release
 on:
   push:
     branches:
-      - 'master'
-      - 'Stable*'
+      - 'AAGS-4.3.0-NOCAM-FINAL'
     tags:
       - 'v*'
   pull_request:
@@ -18,7 +17,7 @@ defaults:
 env:
   SOURCE_DIR:   ${{ github.workspace }}
   QT_VERSION:   5.15.2
-  ARTIFACT:     QGroundControl.dmg
+  ARTIFACT:     AAGS.dmg
   BUILD_TYPE:   ${{ fromJSON('["DailyBuild", "StableBuild"]')[ github.ref_type == 'tag' || contains(github.ref, 'Stable_' ) ] }}
 
 jobs:
@@ -34,7 +33,7 @@ jobs:
       - name: Get all tags for correct version determination
         working-directory:  ${{ github.workspace }}
         run: |
-          git fetch --all --tags -f --depth 1
+          git fetch --all --tags -f
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
@@ -102,7 +101,7 @@ jobs:
         run: |
               aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
               aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-              aws s3 cp ${ARTIFACT} s3://qgroundcontrol/builds/${{ github.ref_name }}/${ARTIFACT} --region us-west-2 --acl public-read
+              aws s3 cp ${ARTIFACT} s3://aags/builds/${{ github.ref_name }}/${ARTIFACT} --region us-west-2 --acl public-read
 
       - name: Upload tagged stable build to S3 latest Bucket
         if:                 github.event_name == 'push' && github.ref_type == 'tag'
@@ -110,4 +109,4 @@ jobs:
         run: |
               aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
               aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-              aws s3 cp ${ARTIFACT} s3://qgroundcontrol/latest/${ARTIFACT} --region us-west-2 --acl public-read
+              aws s3 cp ${ARTIFACT} s3://aags/latest/${ARTIFACT} --region us-west-2 --acl public-read
