@@ -27,7 +27,7 @@ exists($$ANDROID_PACKAGE_CUSTOM_SOURCE_DIR) {
 
     android_source_dir_target.commands = $$android_source_dir_target.commands && \
             $$QMAKE_COPY_DIR $$ANDROID_PACKAGE_CUSTOM_SOURCE_DIR/* $$ANDROID_PACKAGE_SOURCE_DIR && \
-            $$QMAKE_STREAM_EDITOR -i \"s/package=\\\"org.mavlink.qgroundcontrol\\\"/package=\\\"$$QGC_ANDROID_PACKAGE\\\"/\" $$ANDROID_PACKAGE_SOURCE_DIR/AndroidManifest.xml
+            $$QMAKE_STREAM_EDITOR -i \"s/package=\\\"org.AppliedAeronautics.AAGS\\\"/package=\\\"$$QGC_ANDROID_PACKAGE\\\"/\" $$ANDROID_PACKAGE_SOURCE_DIR/AndroidManifest.xml
 }
 
 # Insert package name into manifest file
