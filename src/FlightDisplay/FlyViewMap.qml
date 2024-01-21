@@ -661,8 +661,7 @@ FlightMap {
           id: vehicleCircle
           center: _activeVehicleCoordinate
           radius: vehicleCircleRadius
-          //color: "blue"  // You can choose the color
-          border.color: "red"
+          border.color: "darkred"
           border.width: 3
           visible: _activeVehicle ? true : false  // Only show when there is an active vehicle
       }
