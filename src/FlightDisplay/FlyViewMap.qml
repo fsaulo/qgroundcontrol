@@ -652,4 +652,111 @@ FlightMap {
         property real centerInset: visible ? parent.height - y : 0
     }
 
+    //AA - this adds the circles around the vehicle to tracking distance when flying into bounds of the test manned aircraft.
+
+
+    property real vehicleCircleRadius: 304.8  // default radius, you can change it dynamically
+
+      MapCircle {
+          id: vehicleCircle
+          center: _activeVehicleCoordinate
+          radius: vehicleCircleRadius
+          //color: "blue"  // You can choose the color
+          border.color: "red"
+          border.width: 3
+          visible: _activeVehicle ? true : false  // Only show when there is an active vehicle
+      }
+
+      MapQuickItem {
+              // Coordinate for the top of the circle
+              coordinate: _activeVehicleCoordinate.atDistanceAndAzimuth(vehicleCircleRadius + 10, 0) // 0 degrees for the top
+              anchorPoint.x: textItem.width / 2
+              anchorPoint.y: textItem.height / 2
+
+              sourceItem: Text {
+                  id: textItem
+                  text: "2000ft"
+                  font.pixelSize: 16
+                  color: "black"
+              }
+          }
+
+
+
+     property real vehicleCircleRadius1: 381  // default radius, you can change it dynamically
+
+        MapCircle {
+            id: vehicleCircle1
+            center: _activeVehicleCoordinate
+            radius: vehicleCircleRadius1
+            //color: "blue"  // You can choose the color
+            border.color: "darkblue"
+            border.width: 3
+            visible: _activeVehicle ? true : false  // Only show when there is an active vehicle
+        }
+
+        MapQuickItem {
+                // Coordinate for the top of the circle
+                coordinate: _activeVehicleCoordinate.atDistanceAndAzimuth(vehicleCircleRadius1 + 10, 0) // 0 degrees for the top
+                anchorPoint.x: textItem.width / 2
+                anchorPoint.y: textItem.height / 2
+
+                sourceItem: Text {
+                    id: textItem1
+                    text: "2500ft"
+                    font.pixelSize: 16
+                    color: "black"
+                }
+            }
+
+    property real vehicleCircleRadius2: 457.2  // default radius, you can change it dynamically
+
+                MapCircle {
+                    id: vehicleCircle2
+                    center: _activeVehicleCoordinate
+                    radius: vehicleCircleRadius2
+                    border.color: "black"
+                    border.width: 3
+                    visible: _activeVehicle ? true : false  // Only show when there is an active vehicle
+                }
+
+                MapQuickItem {
+                        // Coordinate for the top of the circle
+                        coordinate: _activeVehicleCoordinate.atDistanceAndAzimuth(vehicleCircleRadius2 + 10, 0) // 0 degrees for the top
+                        anchorPoint.x: textItem.width / 2
+                        anchorPoint.y: textItem.height / 2
+
+                        sourceItem: Text {
+                            id: textItem2
+                            text: "3000ft"
+                            font.pixelSize: 16
+                            color: "black"
+                        }
+                    }
+
+                property real vehicleCircleRadius3: 533.4  // default radius, you can change it dynamically
+
+                        MapCircle {
+                            id: vehicleCircle3
+                            center: _activeVehicleCoordinate
+                            radius: vehicleCircleRadius3
+                            border.color: "darkgreen"
+                            border.width: 3
+                            visible: _activeVehicle ? true : false  // Only show when there is an active vehicle
+                        }
+
+                        MapQuickItem {
+                                // Coordinate for the top of the circle
+                                coordinate: _activeVehicleCoordinate.atDistanceAndAzimuth(vehicleCircleRadius3 + 10, 0) // 0 degrees for the top
+                                anchorPoint.x: textItem.width / 2
+                                anchorPoint.y: textItem.height / 2
+
+                                sourceItem: Text {
+                                    id: textItem3
+                                    text: "3500ft"
+                                    font.pixelSize: 16
+                                    color: "black"
+                                }
+                            }
+
 }

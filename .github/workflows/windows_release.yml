@@ -3,7 +3,7 @@ name: Windows Release
 on:
   push:
     branches:
-      - 'AAGS-4.3.0-NOCAM-FINAL'
+      - 'AAGS-4.3.0-FAA-A54'
     tags:
       - 'v*'
   pull_request:
