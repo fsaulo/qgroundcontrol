@@ -170,6 +170,7 @@ Item {
                 text:                   _gradientText
                 font.pointSize:         _dataFontSize
                 Layout.minimumWidth:    _mediumValueWidth
+                color:                  _gradient >= 8.5 || _gradient <= -5.7 ? "red": "white"  // AA added for flight planning. Set color to red if condition is met, else inherit
             }
 
             Item { width: 1; height: 1 }
