@@ -655,7 +655,7 @@ FlightMap {
     //AA - this adds the circles around the vehicle to tracking distance when flying into bounds of the test manned aircraft.
 
 
-    property real vehicleCircleRadius: 304.8  // default radius, you can change it dynamically
+    property real vehicleCircleRadius: 609.6  // default radius, you can change it dynamically
 
       MapCircle {
           id: vehicleCircle
@@ -682,7 +682,7 @@ FlightMap {
 
 
 
-     property real vehicleCircleRadius1: 381  // default radius, you can change it dynamically
+     property real vehicleCircleRadius1: 762  // default radius, you can change it dynamically
 
         MapCircle {
             id: vehicleCircle1
@@ -708,7 +708,7 @@ FlightMap {
                 }
             }
 
-    property real vehicleCircleRadius2: 457.2  // default radius, you can change it dynamically
+    property real vehicleCircleRadius2: 914.4  // default radius, you can change it dynamically
 
                 MapCircle {
                     id: vehicleCircle2
@@ -733,7 +733,7 @@ FlightMap {
                         }
                     }
 
-                property real vehicleCircleRadius3: 533.4  // default radius, you can change it dynamically
+                property real vehicleCircleRadius3: 1066.8  // default radius, you can change it dynamically
 
                         MapCircle {
                             id: vehicleCircle3
