@@ -758,4 +758,128 @@ FlightMap {
                                 }
                             }
 
+                        property real vehicleCircleRadius4: 1767.84  // default radius, you can change it dynamically
+
+                                MapCircle {
+                                    id: vehicleCircle4
+                                    center: _activeVehicleCoordinate
+                                    radius: vehicleCircleRadius4
+                                    border.color: "green"
+                                    border.width: 3
+                                    visible: _activeVehicle ? true : false  // Only show when there is an active vehicle
+                                }
+
+                                MapQuickItem {
+                                        // Coordinate for the top of the circle
+                                        coordinate: _activeVehicleCoordinate.atDistanceAndAzimuth(vehicleCircleRadius4 + 10, 0) // 0 degrees for the top
+                                        anchorPoint.x: textItem.width / 2
+                                        anchorPoint.y: textItem.height / 2
+
+                                        sourceItem: Text {
+                                            id: textItem4
+                                            text: "5800ft"
+                                            font.pixelSize: 16
+                                            color: "black"
+                                        }
+                                    }
+
+                                property real vehicleCircleRadius5: 1981.2  // default radius, you can change it dynamically
+
+                                        MapCircle {
+                                            id: vehicleCircle5
+                                            center: _activeVehicleCoordinate
+                                            radius: vehicleCircleRadius5
+                                            border.color: "orange"
+                                            border.width: 3
+                                            visible: _activeVehicle ? true : false  // Only show when there is an active vehicle
+                                        }
+
+                                        MapQuickItem {
+                                                // Coordinate for the top of the circle
+                                                coordinate: _activeVehicleCoordinate.atDistanceAndAzimuth(vehicleCircleRadius5 + 10, 0) // 0 degrees for the top
+                                                anchorPoint.x: textItem.width / 2
+                                                anchorPoint.y: textItem.height / 2
+
+                                                sourceItem: Text {
+                                                    id: textItem5
+                                                    text: "6500ft"
+                                                    font.pixelSize: 16
+                                                    color: "black"
+                                                }
+                                            }
+
+                                        property real vehicleCircleRadius6: 2194.56  // default radius, you can change it dynamically
+
+                                                MapCircle {
+                                                    id: vehicleCircle6
+                                                    center: _activeVehicleCoordinate
+                                                    radius: vehicleCircleRadius6
+                                                    border.color: "blue"
+                                                    border.width: 3
+                                                    visible: _activeVehicle ? true : false  // Only show when there is an active vehicle
+                                                }
+
+                                                MapQuickItem {
+                                                        // Coordinate for the top of the circle
+                                                        coordinate: _activeVehicleCoordinate.atDistanceAndAzimuth(vehicleCircleRadius6 + 10, 0) // 0 degrees for the top
+                                                        anchorPoint.x: textItem.width / 2
+                                                        anchorPoint.y: textItem.height / 2
+
+                                                        sourceItem: Text {
+                                                            id: textItem6
+                                                            text: "7200ft"
+                                                            font.pixelSize: 16
+                                                            color: "black"
+                                                        }
+                                                    }
+
+                                                property real vehicleCircleRadius7: 2407.92  // default radius, you can change it dynamically
+
+                                                        MapCircle {
+                                                            id: vehicleCircle7
+                                                            center: _activeVehicleCoordinate
+                                                            radius: vehicleCircleRadius7
+                                                            border.color: "yellow"
+                                                            border.width: 3
+                                                            visible: _activeVehicle ? true : false  // Only show when there is an active vehicle
+                                                        }
+
+                                                        MapQuickItem {
+                                                                // Coordinate for the top of the circle
+                                                                coordinate: _activeVehicleCoordinate.atDistanceAndAzimuth(vehicleCircleRadius7 + 10, 0) // 0 degrees for the top
+                                                                anchorPoint.x: textItem.width / 2
+                                                                anchorPoint.y: textItem.height / 2
+
+                                                                sourceItem: Text {
+                                                                    id: textItem7
+                                                                    text: "7900ft"
+                                                                    font.pixelSize: 16
+                                                                    color: "black"
+                                                                }
+                                                            }
+                                                        property real vehicleCircleRadius8: 2834.64  // default radius, you can change it dynamically
+
+                                                                MapCircle {
+                                                                    id: vehicleCircle8
+                                                                    center: _activeVehicleCoordinate
+                                                                    radius: vehicleCircleRadius8
+                                                                    border.color: "brown"
+                                                                    border.width: 3
+                                                                    visible: _activeVehicle ? true : false  // Only show when there is an active vehicle
+                                                                }
+
+                                                                MapQuickItem {
+                                                                        // Coordinate for the top of the circle
+                                                                        coordinate: _activeVehicleCoordinate.atDistanceAndAzimuth(vehicleCircleRadius8 + 10, 0) // 0 degrees for the top
+                                                                        anchorPoint.x: textItem.width / 2
+                                                                        anchorPoint.y: textItem.height / 2
+
+                                                                        sourceItem: Text {
+                                                                            id: textItem8
+                                                                            text: "9300ft"
+                                                                            font.pixelSize: 16
+                                                                            color: "black"
+                                                                        }
+                                                                    }
+
 }
