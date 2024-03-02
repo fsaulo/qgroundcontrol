@@ -109,16 +109,24 @@ void TrajectoryPoints::start(void)
 {
     clear();
     connect(_vehicle, &Vehicle::coordinateChanged, this, &TrajectoryPoints::_vehicleCoordinateChanged);
+    connect(_vehicle, &Vehicle::coordinateGps1Changed, this, &TrajectoryPoints::_vehicleCoordinateGps1Changed);
+    connect(_vehicle, &Vehicle::coordinateGps2Changed, this, &TrajectoryPoints::_vehicleCoordinateGps2Changed);
 }
 
 void TrajectoryPoints::stop(void)
 {
     disconnect(_vehicle, &Vehicle::coordinateChanged, this, &TrajectoryPoints::_vehicleCoordinateChanged);
+    disconnect(_vehicle, &Vehicle::coordinateGps1Changed, this, &TrajectoryPoints::_vehicleCoordinateGps1Changed);
+    disconnect(_vehicle, &Vehicle::coordinateGps2Changed, this, &TrajectoryPoints::_vehicleCoordinateGps2Changed);
 }
 
 void TrajectoryPoints::clear(void)
 {
     _points.clear();
+    _pointsGps2.clear()
+    _pointsGps1.clear();
+    _lastPoint = _lastPointGps1 = _lastPointGps2 = QGeoCoordinate();
+    _lastAzimuth = _lastAzimuthGps1 = _lastAzimuthGps2 = qQNaN();
     _lastPoint = QGeoCoordinate();
     _lastAzimuth = qQNaN();
     emit pointsCleared();
