@@ -350,10 +350,11 @@ FlightMap {
 
                 Rectangle {
                     x:  0
-                    y:  250
+                    y:  350
                     height: 50;
-                    width: 400;
+                    width: 420;
                     color: "black";
+                    radius: ScreenTools.defaultFontPixelHeight * 0.5;
 
                     ColumnLayout {
                         anchors.fill: parent
