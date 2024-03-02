@@ -2271,6 +2271,9 @@ void Vehicle::setFlightMode(const QString& flightMode)
         // states.
         newBaseMode |= base_mode;
 
+        qCInfo(VehicleLog) << "setFlightMode:" << flightMode << " base_mode:custom_mode: " << _base_mode << ":"<< _custom_mode; //AA Question RE line 2277 below with this.
+
+
         if (_firmwarePlugin->MAV_CMD_DO_SET_MODE_is_supported()) {
             sendMavCommand(defaultComponentId(),
                            MAV_CMD_DO_SET_MODE,

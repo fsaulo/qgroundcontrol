@@ -969,6 +969,8 @@ bool FirmwarePlugin::_setFlightModeAndValidate(Vehicle* vehicle, const QString& 
         return true;
     }
 
+    // log
+    qCInfo(FirmwarePluginLog) << "Setting flight mode" << flightMode << "vehicle" << vehicle->id();
     bool flightModeChanged = false;
 
     // We try 3 times
