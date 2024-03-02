@@ -270,12 +270,7 @@ FlightMap {
 
         Connections {
             target:                 _activeVehicle ? _activeVehicle.trajectoryPoints : null
-            //onPointAdded:           trajectoryPolyline.addCoordinate(coordinate)
-            onPointAdded: {
-                    trajectoryPolyline.addCoordinate(coordinate);
-                    trajectoryPolyline.visible = true;
-                    trajectoryTimer.restart(); // Restart the timer each time a new point is added
-                }
+            onPointAdded:           trajectoryPolyline.addCoordinate(coordinate)
             onUpdateLastPoint:      trajectoryPolyline.replaceCoordinate(trajectoryPolyline.pathLength() - 1, coordinate)
             onPointsCleared:        trajectoryPolyline.path = []
         }
@@ -519,18 +514,6 @@ FlightMap {
         function actionCancelled() {
         }
     }
-
-
-    Timer {
-        id: trajectoryTimer
-        interval: 15000 // 15 seconds
-        running: false
-        repeat: false
-        onTriggered: {
-            trajectoryPolyline.visible = false; // Hide the trajectory line
-            // Or use trajectoryPolyline.path = []; to clear the trajectory line
-        }
-    } //AA added timer for trajectory
 
 
     // Orbit telemetry visuals
