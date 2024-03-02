@@ -3,7 +3,7 @@ name: MacOS Release
 on:
   push:
     branches:
-      - 'AAGS-4.3.0-FAA-A54'
+      - 'AAGS-4.3.0-VPS'
     tags:
       - 'v*'
   pull_request:

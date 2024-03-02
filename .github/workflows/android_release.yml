@@ -4,7 +4,7 @@ name: Android 32/64-bit Release
 on:
   push:
     branches:
-      - 'AAGS-4.3.0-NOCAM-FINAL'
+      - 'AAGS-4.3.0-VPS'
     tags:
       - 'v*'
   pull_request:
