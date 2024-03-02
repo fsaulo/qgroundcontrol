@@ -346,7 +346,33 @@ FlightMap {
     CustomMapItems {
         map:            _root
         largeMapView:   !pipMode
+        visible: true
+
+                Rectangle {
+                    x:  0
+                    y:  250
+                    height: 50;
+                    width: 400;
+                    color: "black";
+
+                    ColumnLayout {
+                        anchors.fill: parent
+                        spacing: 2
+
+                        QGCLabel {
+                            text: qsTr("Vehicle position GPS1: (%1)").arg(_activeVehicleCoordinate)
+                            font.family:    ScreenTools.demiboldFontFamily
+                        }
+
+                        QGCLabel {
+                            text: qsTr("Vehicle position GPS2: (%1)").arg(_activeVehicleCoordinate)
+                            font.family:    ScreenTools.demiboldFontFamily
+                        }
+                    }
+                }
     }
+
+
 
     GeoFenceMapVisuals {
         map:                    _root
