@@ -161,6 +161,8 @@ public:
     Q_PROPERTY(int                  id                          READ id                                                             CONSTANT)
     Q_PROPERTY(AutoPilotPlugin*     autopilot                   MEMBER _autopilotPlugin                                             CONSTANT)
     Q_PROPERTY(QGeoCoordinate       coordinate                  READ coordinate                                                     NOTIFY coordinateChanged)
+    Q_PROPERTY(QGeoCoordinate       coordinateGps1              READ coordinateGps1                                                 NOTIFY coordinateGps1Changed)
+    Q_PROPERTY(QGeoCoordinate       coordinateGps2              READ coordinateGps2                                                 NOTIFY coordinateGps2Changed)
     Q_PROPERTY(QGeoCoordinate       homePosition                READ homePosition                                                   NOTIFY homePositionChanged)
     Q_PROPERTY(QGeoCoordinate       armedPosition               READ armedPosition                                                  NOTIFY armedPositionChanged)
     Q_PROPERTY(bool                 armed                       READ armed                      WRITE setArmedShowError             NOTIFY armedChanged)
@@ -484,6 +486,8 @@ public:
     // Property accessors
 
     QGeoCoordinate coordinate() { return _coordinate; }
+    QGeoCoordinate coordinateGps1() { return _coordinateGps1; }
+    QGeoCoordinate coordinateGps2() { return _coordinateGps2; }
     QGeoCoordinate armedPosition    () { return _armedPosition; }
 
     void updateFlightDistance(double distance);
@@ -923,6 +927,8 @@ public slots:
 
 signals:
     void coordinateChanged              (QGeoCoordinate coordinate);
+    void coordinateGps1Changed          (QGeoCoordinate coordinate);
+    void coordinateGps2Changed          (QGeoCoordinate coordinate);
     void joystickEnabledChanged         (bool enabled);
     void mavlinkMessageReceived         (const mavlink_message_t& message);
     void homePositionChanged            (const QGeoCoordinate& homePosition);
@@ -1077,6 +1083,7 @@ private:
     void _handleExtendedSysState        (mavlink_message_t& message);
     void _handleCommandAck              (mavlink_message_t& message);
     void _handleGpsRawInt               (mavlink_message_t& message);
+    void _handleGps1RawInt              (mavlink_message_t& message);
     void _handleGps2Raw                 (mavlink_message_t& message);
     void _handleGlobalPositionInt       (mavlink_message_t& message);
     void _handleAltitude                (mavlink_message_t& message);
@@ -1148,6 +1155,8 @@ private:
     UAS* _uas = nullptr;
 
     QGeoCoordinate  _coordinate;
+    QGeoCoordinate  _coordinateGps1;
+    QGeoCoordinate  _coordinateGps2;
     QGeoCoordinate  _homePosition;
     QGeoCoordinate  _armedPosition;
 

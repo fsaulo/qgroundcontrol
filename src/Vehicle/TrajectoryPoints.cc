@@ -51,6 +51,60 @@ void TrajectoryPoints::_vehicleCoordinateChanged(QGeoCoordinate coordinate)
     }
 }
 
+void TrajectoryPoints::_vehicleCoordinateGps1Changed(QGeoCoordinate coordinate)
+{
+    if (!_lastPointGps1.isValid()) {
+        _lastPointGps1 = coordinate;
+        _pointsGps1.append(QVariant::fromValue(coordinate));
+        emit updateLastPoint(coordinate);
+        return;
+    }
+
+    double distance = _lastPointGps1.distanceTo(coordinate);
+    if (distance < _distanceTolerance) {
+        return;
+    }
+
+    double newAzimuth = _lastPointGps1.azimuthTo(coordinate);
+    if (qIsNaN(_lastAzimuthGps1) || qAbs(newAzimuth - _lastAzimuthGps1) > _azimuthTolerance) {
+        _lastAzimuthGps1 = _lastPointGps1.azimuthTo(coordinate);
+        _lastPointGps1 = coordinate;
+        _pointsGps1.append(QVariant::fromValue(coordinate));
+        emit pointAdded(coordinate);
+    } else {
+        _lastPointGps1 = coordinate;
+        _pointsGps1[_pointsGps1.count() - 1] = QVariant::fromValue(coordinate);
+        emit updateLastPoint(coordinate);
+    }
+}
+
+void TrajectoryPoints::_vehicleCoordinateGps2Changed(QGeoCoordinate coordinate)
+{
+    if (!_lastPointGps2.isValid()) {
+        _lastPointGps2 = coordinate;
+        _pointsGps2.append(QVariant::fromValue(coordinate));
+        emit updateLastPoint(coordinate);
+        return;
+    }
+
+    double distance = _lastPointGps2.distanceTo(coordinate);
+    if (distance < _distanceTolerance) {
+        return;
+    }
+
+    double newAzimuth = _lastPointGps2.azimuthTo(coordinate);
+    if (qIsNaN(_lastAzimuthGps2) || qAbs(newAzimuth - _lastAzimuthGps2) > _azimuthTolerance) {
+        _lastAzimuthGps2 = _lastPointGps2.azimuthTo(coordinate);
+        _lastPointGps2 = coordinate;
+        _pointsGps2.append(QVariant::fromValue(coordinate));
+        emit pointAdded(coordinate);
+    } else {
+        _lastPointGps2 = coordinate;
+        _pointsGps2[_pointsGps2.count() - 1] = QVariant::fromValue(coordinate);
+        emit updateLastPoint(coordinate);
+    }
+}
+
 void TrajectoryPoints::start(void)
 {
     clear();

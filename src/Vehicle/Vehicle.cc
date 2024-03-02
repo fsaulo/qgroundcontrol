@@ -714,6 +714,7 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
         break;
     case MAVLINK_MSG_ID_GPS_RAW_INT:
         _handleGpsRawInt(message);
+        _handleGps1RawInt(message);
         break;
     case MAVLINK_MSG_ID_GPS2_RAW:
         _handleGps2Raw(message);
@@ -1162,10 +1163,34 @@ void Vehicle::_handleGpsRawInt(mavlink_message_t& message)
     }
 }
 
+void Vehicle::_handleGps1RawInt(mavlink_message_t& message)
+{
+    mavlink_gps_raw_int_t gps1RawInt;
+    mavlink_msg_gps_raw_int_decode(&message, &gps1RawInt);
+
+    if (gps1RawInt.fix_type >= GPS_FIX_TYPE_3D_FIX) {
+        QGeoCoordinate newPosition(gps1RawInt.lat  / (double)1E7, gps1RawInt.lon / (double)1E7, gps1RawInt.alt  / 1000.0);
+        if (newPosition != _coordinate) {
+            _coordinateGps1 = newPosition;
+            emit coordinateGps1Changed(_coordinateGps1);
+        }
+        if (!_altitudeMessageAvailable) {
+            _altitudeAMSLFact.setRawValue(gps1RawInt.alt / 1000.0);
+        }
+    }
+}
+
 void Vehicle::_handleGps2Raw(mavlink_message_t& message)
 {
     mavlink_gps2_raw_t gps2Raw;
     mavlink_msg_gps2_raw_decode(&message, &gps2Raw);
+    if (gps2Raw.fix_type >= GPS_FIX_TYPE_3D_FIX) {
+        QGeoCoordinate newPosition(gps2Raw.lat  / (double)1E7, gps2Raw.lon / (double)1E7, gps2Raw.alt  / 1000.0);
+        if (newPosition != _coordinateGps2) {
+            _coordinateGps2 = newPosition;
+            emit coordinateGps2Changed(_coordinateGps2);
+        }
+    }
 }
 
 void Vehicle::_handleGlobalPositionInt(mavlink_message_t& message)
