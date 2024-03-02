@@ -123,7 +123,7 @@ void TrajectoryPoints::stop(void)
 void TrajectoryPoints::clear(void)
 {
     _points.clear();
-    _pointsGps2.clear()
+    _pointsGps2.clear();
     _pointsGps1.clear();
     _lastPoint = _lastPointGps1 = _lastPointGps2 = QGeoCoordinate();
     _lastAzimuth = _lastAzimuthGps1 = _lastAzimuthGps2 = qQNaN();
