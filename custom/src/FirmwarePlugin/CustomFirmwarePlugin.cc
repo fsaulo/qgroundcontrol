@@ -40,7 +40,7 @@ const QVariantList& CustomFirmwarePlugin::toolIndicators(const Vehicle* vehicle)
         // any new toolbar indicators which are added upstream in our custom build.
         _toolIndicatorList = FirmwarePlugin::toolIndicators(vehicle);
         // Then specifically remove the RC RSSI indicator.
-        _toolIndicatorList.removeOne(QVariant::fromValue(QUrl::fromUserInput("qrc:/toolbar/RCRSSIIndicator.qml"))); //AA removes the RC RSSI which we dont always wants
+        //_toolIndicatorList.removeOne(QVariant::fromValue(QUrl::fromUserInput("qrc:/toolbar/RCRSSIIndicator.qml"))); //AA removes the RC RSSI which we dont always wants
     }
     return _toolIndicatorList;
 }
