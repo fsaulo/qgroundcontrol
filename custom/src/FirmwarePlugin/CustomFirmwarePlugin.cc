@@ -20,7 +20,7 @@ CustomFirmwarePlugin::CustomFirmwarePlugin()
     for (int i = 0; i < _flightModeInfoList.count(); i++) {
         FlightModeInfo_t& info = _flightModeInfoList[i];
         //-- Narrow the flight mode options to only these
-        if (info.name != _stabilizedFlightMode && info.name != _posCtlFlightMode && info.name != _holdFlightMode && info.name != _missionFlightMode && info.name != _rtlFlightMode) { //AA - restrict flight modes
+        if (info.name != _stabilizedFlightMode && info.name != _posCtlFlightMode && info.name != _holdFlightMode && info.name != _missionFlightMode && info.name != _vpsFlightMode && info.name != _rtlFlightMode) { //AA - restrict flight modes
             // No other flight modes can be set
             info.canBeSet = false;
         }
