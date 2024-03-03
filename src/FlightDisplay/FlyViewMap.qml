@@ -48,6 +48,8 @@ FlightMap {
     property var    _geoFenceController:        planMasterController.geoFenceController
     property var    _rallyPointController:      planMasterController.rallyPointController
     property var    _activeVehicleCoordinate:   _activeVehicle ? _activeVehicle.coordinate : QtPositioning.coordinate()
+    property var    _activeVehicleCoordinateGps1: _activeVehicle ? _activeVehicle.coordinateGps1 : QtPositioning.coordinate()
+    property var    _activeVehicleCoordinateGps2: _activeVehicle ? _activeVehicle.coordinateGps2 : QtPositioning.coordinate()
     property real   _toolButtonTopMargin:       parent.height - mainWindow.height + (ScreenTools.defaultFontPixelHeight / 2)
     property real   _toolsMargin:               ScreenTools.defaultFontPixelWidth * 0.75
     property var    _flyViewSettings:           QGroundControl.settingsManager.flyViewSettings
@@ -276,6 +278,52 @@ FlightMap {
         }
     }
 
+    // Add Gps1 trajectory lines to the map
+       MapPolyline {
+           id:         trajectoryGps1Polyline
+           line.width: 3
+           line.color: "green"
+           z:          QGroundControl.zOrderTrajectoryLines
+           visible:    !pipMode
+
+           Connections {
+               target:                 QGroundControl.multiVehicleManager
+               function onActiveVehicleChanged(activeVehicle) {
+                   trajectoryGps1Polyline.path = _activeVehicle ? _activeVehicle.trajectoryPoints.listGps1() : []
+               }
+           }
+
+           Connections {
+               target:                 _activeVehicle ? _activeVehicle.trajectoryPoints : null
+               onPointAdded:           trajectoryGps1Polyline.addCoordinate(_activeVehicleCoordinateGps1)
+               onUpdateLastPoint:      trajectoryGps1Polyline.replaceCoordinate(trajectoryGps1Polyline.pathLength() - 1, _activeVehicleCoordinateGps1)
+               onPointsCleared:        trajectoryGps1Polyline.path = []
+           }
+       }
+
+       // Add Gps2 trajectory lines to the map
+       MapPolyline {
+           id:         trajectoryGps2Polyline
+           line.width: 3
+           line.color: "blue"
+           z:          QGroundControl.zOrderTrajectoryLines
+           visible:    !pipMode
+
+           Connections {
+               target:                 QGroundControl.multiVehicleManager
+               function onActiveVehicleChanged(activeVehicle) {
+                   trajectoryGps2Polyline.path = _activeVehicle ? _activeVehicle.trajectoryPoints.listGps2() : []
+               }
+           }
+
+           Connections {
+               target:                 _activeVehicle ? _activeVehicle.trajectoryPoints : null
+               onPointAdded:           trajectoryGps2Polyline.addCoordinate(_activeVehicleCoordinateGps2)
+               onUpdateLastPoint:      trajectoryGps2Polyline.replaceCoordinate(trajectoryGps2Polyline.pathLength() - 1, _activeVehicleCoordinateGps2)
+               onPointsCleared:        trajectoryGps2Polyline.path = []
+           }
+       }
+
     // Add the vehicles to the map
     MapItemView {
         model: QGroundControl.multiVehicleManager.vehicles
@@ -350,9 +398,9 @@ FlightMap {
 
                 Rectangle {
                     x:  0
-                    y:  350
+                    y:  450
                     height: 50;
-                    width: 420;
+                    width: 450;
                     color: "black";
                     radius: ScreenTools.defaultFontPixelHeight * 0.5;
 
@@ -361,12 +409,12 @@ FlightMap {
                         spacing: 2
 
                         QGCLabel {
-                            text: qsTr("Vehicle position GPS1: (%1)").arg(_activeVehicleCoordinate)
+                            text: qsTr("Vehicle position GPS1 - Green: (%1)").arg(_activeVehicleCoordinate)
                             font.family:    ScreenTools.demiboldFontFamily
                         }
 
                         QGCLabel {
-                            text: qsTr("Vehicle position GPS2: (%1)").arg(_activeVehicleCoordinate)
+                            text: qsTr("Vehicle position GPS2 - Blue: (%1)").arg(_activeVehicleCoordinate)
                             font.family:    ScreenTools.demiboldFontFamily
                         }
                     }
