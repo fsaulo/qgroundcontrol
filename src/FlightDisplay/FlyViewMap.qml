@@ -408,14 +408,25 @@ FlightMap {
                         anchors.fill: parent
                         spacing: 2
 
+                        //QGCLabel {
+                           // text: qsTr("Vehicle position GPS1 - Green: (%1)").arg(_activeVehicleCoordinate)
+                            //font.family:    ScreenTools.demiboldFontFamily
+                        //}
+
                         QGCLabel {
-                            text: qsTr("Vehicle position GPS1 - Green: (%1)").arg(_activeVehicleCoordinate)
-                            font.family:    ScreenTools.demiboldFontFamily
+                            textFormat: Text.RichText
+                            text: qsTr("Vehicle position GPS1 - <font color='green'>Green</font>: (%1)").arg(_activeVehicleCoordinate)
+                            font.family: ScreenTools.demiboldFontFamily
                         }
 
                         QGCLabel {
-                            text: qsTr("Vehicle position GPS2 - Blue: (%1)").arg(_activeVehicleCoordinate)
+                            textFormat: Text.RichText
+                            text: qsTr("Vehicle position GPS2 - <font color='blue'>Blue</font>: (%1)").arg(_activeVehicleCoordinate)
                             font.family:    ScreenTools.demiboldFontFamily
+
+                       // QGCLabel {
+                         //   text: qsTr("Vehicle position GPS2 - Blue: (%1)").arg(_activeVehicleCoordinate)
+                           // font.family:    ScreenTools.demiboldFontFamily
                         }
                     }
                 }
