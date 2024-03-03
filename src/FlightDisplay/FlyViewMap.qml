@@ -398,8 +398,8 @@ FlightMap {
 
                 Rectangle {
                     x:  0
-                    y:  450
-                    height: 50;
+                    y:  600
+                    height: 60;
                     width: 450;
                     color: "black";
                     radius: ScreenTools.defaultFontPixelHeight * 0.5;
@@ -414,20 +414,30 @@ FlightMap {
                         //}
 
                         QGCLabel {
-                            textFormat: Text.RichText
-                            text: qsTr("Vehicle position GPS1 - <font color='green'>Green</font>: (%1)").arg(_activeVehicleCoordinate)
+                            text: qsTr("Vehicle position: (%1)").arg(_activeVehicleCoordinate)
                             font.family: ScreenTools.demiboldFontFamily
+                        }
+                        QGCLabel {
+                            text: qsTr("Vehicle position GPS1: (%1)").arg(_activeVehicleCoordinateGps1)
+                            font.family:    ScreenTools.demiboldFontFamily
                         }
 
                         QGCLabel {
-                            textFormat: Text.RichText
-                            text: qsTr("Vehicle position GPS2 - <font color='blue'>Blue</font>: (%1)").arg(_activeVehicleCoordinate)
-                            font.family:    ScreenTools.demiboldFontFamily
+                            text: qsTr("Vehicle position GPS2: (%1)").arg(_activeVehicleCoordinateGps2)
+                        }
+
+                            //textFormat: Text.RichText
+                            //text: qsTr("Vehicle position GPS1 - <font color='green'>Green</font>: (%1)").arg(_activeVehicleCoordinate)
+                            //font.family: ScreenTools.demiboldFontFamily
+
+                           // textFormat: Text.RichText
+                            //text: qsTr("Vehicle position GPS2 - <font color='blue'>Blue</font>: (%1)").arg(_activeVehicleCoordinate)
+                            //font.family:    ScreenTools.demiboldFontFamily
 
                        // QGCLabel {
                          //   text: qsTr("Vehicle position GPS2 - Blue: (%1)").arg(_activeVehicleCoordinate)
                            // font.family:    ScreenTools.demiboldFontFamily
-                        }
+
                     }
                 }
     }
