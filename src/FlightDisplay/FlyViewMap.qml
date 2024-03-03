@@ -397,33 +397,37 @@ FlightMap {
         visible: true
 
                 Rectangle {
-                    x:  0
-                    y:  600
-                    height: 60;
-                    width: 450;
-                    color: "black";
-                    radius: ScreenTools.defaultFontPixelHeight * 0.5;
+                    x:                0
+                    y:                _root.height - 60
+                    width:            150
+                    height:           60
+                    opacity:          0.6
+                    anchors.margins:  10
+                    radius:           3
+                    color:            "black"
 
                     ColumnLayout {
-                        anchors.fill: parent
-                        spacing: 2
+                        spacing: 5
+                        anchors.margins: 5
+                        anchors.verticalCenter: parent.verticalCenter
 
                         //QGCLabel {
                            // text: qsTr("Vehicle position GPS1 - Green: (%1)").arg(_activeVehicleCoordinate)
                             //font.family:    ScreenTools.demiboldFontFamily
                         //}
 
-                        QGCLabel {
-                            text: qsTr("Vehicle position: (%1)").arg(_activeVehicleCoordinate)
-                            font.family: ScreenTools.demiboldFontFamily
+                        LegendWidget {
+                                            routeName: "Vehicle position"
+                                            routeColor: "red"
                         }
-                        QGCLabel {
-                            text: qsTr("Vehicle position GPS1: (%1)").arg(_activeVehicleCoordinateGps1)
-                            font.family:    ScreenTools.demiboldFontFamily
+                        LegendWidget {
+                                            routeName: "GPS1"
+                                            routeColor: "green"
                         }
 
-                        QGCLabel {
-                            text: qsTr("Vehicle position GPS2: (%1)").arg(_activeVehicleCoordinateGps2)
+                        LegendWidget {
+                                            routeName: "VPS"
+                                            routeColor: "blue"
                         }
 
                             //textFormat: Text.RichText

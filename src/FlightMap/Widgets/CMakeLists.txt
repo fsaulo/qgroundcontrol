@@ -3,6 +3,7 @@ add_custom_target(FligthMapWidgetsQml
 		CenterMapDropButton.qml
 		CenterMapDropPanel.qml
 		CompassRing.qml
+		LegendWidget.qml
 		MapFitFunctions.qml
 		PhotoVideoControl.qml
 		QGCArtificialHorizon.qml

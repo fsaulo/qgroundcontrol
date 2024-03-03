@@ -7,6 +7,7 @@ QGCVideoBackground  1.0 QGCVideoBackground.qml
 # Widgets
 CenterMapDropButton         1.0 CenterMapDropButton.qml
 CenterMapDropPanel          1.0 CenterMapDropPanel.qml
+LegendWidget 				1.0 LegendWidget.qml
 CompassRing                 1.0 CompassRing.qml
 MapFitFunctions             1.0 MapFitFunctions.qml
 MapLineArrow                1.0 MapLineArrow.qml
