@@ -398,7 +398,7 @@ FlightMap {
 
                 Rectangle {
                     x:                0
-                    y:                _root.height - 60
+                    y:                _root.height - 400
                     width:            150
                     height:           60
                     opacity:          0.6
