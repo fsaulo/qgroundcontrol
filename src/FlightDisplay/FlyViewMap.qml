@@ -212,6 +212,27 @@ FlightMap {
         }
     }
 
+    function calculateDistance(coord1, coord2) {                                        //AA - This is the distance function for GPS to VPS
+            var distanceMeters = coord1.distanceTo(coord2); // Distance in meters
+            var distanceFeet = distanceMeters * 3.28084; // Convert meters to feet
+            return {
+                meters: distanceMeters,
+                feet: distanceFeet
+            };
+        }
+
+    function updateDistances() {                //AA - updates distance VPS calc and timer
+        var vehicleToGPS1 = calculateDistance(_activeVehicleCoordinate, _activeVehicleCoordinateGps1);
+            vehicleToGPS1DistanceWidget.routeName = "Vehicle to GPS1 Distance: " + vehicleToGPS1.meters.toFixed(2) + " m / " + vehicleToGPS1.feet.toFixed(2) + " ft";
+
+        var vehicleToGPS2 = calculateDistance(_activeVehicleCoordinate, _activeVehicleCoordinateGps2);
+            vehicleToGPS2DistanceWidget.routeName = "Vehicle to VPS Distance: " + vehicleToGPS2.meters.toFixed(2) + " m / " + vehicleToGPS2.feet.toFixed(2) + " ft";
+
+        var GPS1ToVPS = calculateDistance(_activeVehicleCoordinateGps1, _activeVehicleCoordinateGps2);
+            gps1ToVPSDistanceWidget.routeName = "GPS1 to VPS Distance Est: " + GPS1ToVPS.meters.toFixed(2) + " m / " + GPS1ToVPS.feet.toFixed(2) + " ft";
+
+    }
+
     Timer {
         id:         panRecenterTimer
         interval:   10000
@@ -227,6 +248,15 @@ FlightMap {
         running:        true
         repeat:         true
         onTriggered:    updateMapToVehiclePosition()
+    }
+
+    Timer {                     //AA This is the timer for the VPS disance calc
+        interval: 100 // Update every 0.1 seconds
+        running: true
+        repeat: true
+        onTriggered: {
+            updateDistances();
+        }
     }
 
     QGCMapPalette { id: mapPal; lightColors: isSatelliteMap }
@@ -399,8 +429,8 @@ FlightMap {
                 Rectangle {
                     x:                0
                     y:                _root.height - 400
-                    width:            150
-                    height:           60
+                    width:            300
+                    height:           130
                     opacity:          0.6
                     anchors.margins:  10
                     radius:           3
@@ -429,6 +459,24 @@ FlightMap {
                                             routeName: "VPS"
                                             routeColor: "blue"
                         }
+
+                        LegendWidget {                                      //AA - GPS/VPS Distance1
+                               id: vehicleToGPS1DistanceWidget
+                               routeName: "Vehicle to GPS1 Distance: Calculating..."
+                               routeColor: "black" // Choose an appropriate color
+                           }
+
+                        LegendWidget {                                      //AA - GPS/VPS Distance2
+                               id: vehicleToGPS2DistanceWidget
+                               routeName: "Vehicle to VPS Distance: Calculating..."
+                               routeColor: "black" // Choose an appropriate color
+                           }
+
+                        LegendWidget {                                      //AA - GPS/VPS Distance3
+                               id: gps1ToVPSDistanceWidget
+                               routeName: "GPS1 to VPS Distance: Calculating..."
+                               routeColor: "black" // Choose an appropriate color
+                           }
 
                             //textFormat: Text.RichText
                             //text: qsTr("Vehicle position GPS1 - <font color='green'>Green</font>: (%1)").arg(_activeVehicleCoordinate)
