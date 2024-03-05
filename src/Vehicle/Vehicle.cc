@@ -1144,27 +1144,6 @@ void Vehicle::_handleAttitudeQuaternion(mavlink_message_t& message)
 
 void Vehicle::_handleGpsRawInt(mavlink_message_t& message)
 {
-    mavlink_gps_raw_int_t gpsRawInt;
-    mavlink_msg_gps_raw_int_decode(&message, &gpsRawInt);
-
-    _gpsRawIntMessageAvailable = true;
-
-    if (gpsRawInt.fix_type >= GPS_FIX_TYPE_3D_FIX) {
-        if (!_globalPositionIntMessageAvailable) {
-            QGeoCoordinate newPosition(gpsRawInt.lat  / (double)1E7, gpsRawInt.lon / (double)1E7, gpsRawInt.alt  / 1000.0);
-            if (newPosition != _coordinate) {
-                _coordinate = newPosition;
-                emit coordinateChanged(_coordinate);
-            }
-            if (!_altitudeMessageAvailable) {
-                _altitudeAMSLFact.setRawValue(gpsRawInt.alt / 1000.0);
-            }
-        }
-    }
-}
-
-void Vehicle::_handleGps1RawInt(mavlink_message_t& message)
-{
     mavlink_gps_raw_int_t gps1RawInt;
     mavlink_msg_gps_raw_int_decode(&message, &gps1RawInt);
 
@@ -1174,12 +1153,19 @@ void Vehicle::_handleGps1RawInt(mavlink_message_t& message)
             _coordinateGps1 = newPosition;
             emit coordinateGps1Changed(_coordinateGps1);
         }
-        if (!_altitudeMessageAvailable) {
-            _altitudeAMSLFact.setRawValue(gps1RawInt.alt / 1000.0);
-        }
     }
+
+    _gpsFactGroup.lat()->setRawValue(gps1RawInt.lat * 1e-7);
+    _gpsFactGroup.lon()->setRawValue(gps1RawInt.lon * 1e-7);
+    _gpsFactGroup.mgrs()->setRawValue(convertGeoToMGRS(QGeoCoordinate(gps1RawInt.lat * 1e-7, gps1RawInt.lon * 1e-7)));
+    _gpsFactGroup.count()->setRawValue(gps1RawInt.satellites_visible == 255 ? 0 : gps1RawInt.satellites_visible);
+    _gpsFactGroup.hdop()->setRawValue(gps1RawInt.eph == UINT16_MAX ? std::numeric_limits<double>::quiet_NaN() : gps1RawInt.eph / 100.0);
+    _gpsFactGroup.vdop()->setRawValue(gps1RawInt.epv == UINT16_MAX ? std::numeric_limits<double>::quiet_NaN() : gps1RawInt.epv / 100.0);
+    _gpsFactGroup.courseOverGround()->setRawValue(gps1RawInt.cog == UINT16_MAX ? std::numeric_limits<double>::quiet_NaN() : gps1RawInt.cog / 100.0);
+    _gpsFactGroup.lock()->setRawValue(gps1RawInt.fix_type);
 }
 
+void Vehicle::_handleGps1RawInt(mavlink_message_t& message) { }
 void Vehicle::_handleGps2Raw(mavlink_message_t& message)
 {
     mavlink_gps2_raw_t gps2Raw;
@@ -1191,6 +1177,15 @@ void Vehicle::_handleGps2Raw(mavlink_message_t& message)
             emit coordinateGps2Changed(_coordinateGps2);
         }
     }
+
+    _gps2FactGroup.lat()->setRawValue(gps2Raw.lat * 1e-7);
+    _gps2FactGroup.lon()->setRawValue(gps2Raw.lon * 1e-7);
+    _gps2FactGroup.mgrs()->setRawValue(convertGeoToMGRS(QGeoCoordinate(gps2Raw.lat * 1e-7, gps2Raw.lon * 1e-7)));
+    _gps2FactGroup.count()->setRawValue(gps2Raw.satellites_visible == 255 ? 0 : gps2Raw.satellites_visible);
+    _gps2FactGroup.hdop()->setRawValue(gps2Raw.eph == UINT16_MAX ? std::numeric_limits<double>::quiet_NaN() : gps2Raw.eph / 100.0);
+    _gps2FactGroup.vdop()->setRawValue(gps2Raw.epv == UINT16_MAX ? std::numeric_limits<double>::quiet_NaN() : gps2Raw.epv / 100.0);
+    _gps2FactGroup.courseOverGround()->setRawValue(gps2Raw.cog == UINT16_MAX ? std::numeric_limits<double>::quiet_NaN() : gps2Raw.cog / 100.0);
+    _gps2FactGroup.lock()->setRawValue(gps2Raw.fix_type);
 }
 
 void Vehicle::_handleGlobalPositionInt(mavlink_message_t& message)

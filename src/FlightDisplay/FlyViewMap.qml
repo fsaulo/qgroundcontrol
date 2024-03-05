@@ -325,8 +325,8 @@ FlightMap {
 
            Connections {
                target:                 _activeVehicle ? _activeVehicle.trajectoryPoints : null
-               onPointAdded:           trajectoryGps1Polyline.addCoordinate(_activeVehicleCoordinateGps1)
-               onUpdateLastPoint:      trajectoryGps1Polyline.replaceCoordinate(trajectoryGps1Polyline.pathLength() - 1, _activeVehicleCoordinateGps1)
+               onPointAdded1:           trajectoryGps1Polyline.addCoordinate(_activeVehicleCoordinateGps1)
+               onUpdateLastPoint1:      trajectoryGps1Polyline.replaceCoordinate(trajectoryGps1Polyline.pathLength() - 1, _activeVehicleCoordinateGps1)
                onPointsCleared:        trajectoryGps1Polyline.path = []
            }
        }
@@ -348,8 +348,8 @@ FlightMap {
 
            Connections {
                target:                 _activeVehicle ? _activeVehicle.trajectoryPoints : null
-               onPointAdded:           trajectoryGps2Polyline.addCoordinate(_activeVehicleCoordinateGps2)
-               onUpdateLastPoint:      trajectoryGps2Polyline.replaceCoordinate(trajectoryGps2Polyline.pathLength() - 1, _activeVehicleCoordinateGps2)
+               onPointAdded2:           trajectoryGps2Polyline.addCoordinate(_activeVehicleCoordinateGps2)
+               onUpdateLastPoint2:      trajectoryGps2Polyline.replaceCoordinate(trajectoryGps2Polyline.pathLength() - 1, _activeVehicleCoordinateGps2)
                onPointsCleared:        trajectoryGps2Polyline.path = []
            }
        }

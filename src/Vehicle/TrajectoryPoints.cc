@@ -56,7 +56,7 @@ void TrajectoryPoints::_vehicleCoordinateGps1Changed(QGeoCoordinate coordinate)
     if (!_lastPointGps1.isValid()) {
         _lastPointGps1 = coordinate;
         _pointsGps1.append(QVariant::fromValue(coordinate));
-        emit updateLastPoint(coordinate);
+        emit updateLastPoint1(coordinate);
         return;
     }
 
@@ -70,11 +70,11 @@ void TrajectoryPoints::_vehicleCoordinateGps1Changed(QGeoCoordinate coordinate)
         _lastAzimuthGps1 = _lastPointGps1.azimuthTo(coordinate);
         _lastPointGps1 = coordinate;
         _pointsGps1.append(QVariant::fromValue(coordinate));
-        emit pointAdded(coordinate);
+        emit pointAdded1(coordinate);
     } else {
         _lastPointGps1 = coordinate;
         _pointsGps1[_pointsGps1.count() - 1] = QVariant::fromValue(coordinate);
-        emit updateLastPoint(coordinate);
+        emit updateLastPoint1(coordinate);
     }
 }
 
@@ -83,7 +83,7 @@ void TrajectoryPoints::_vehicleCoordinateGps2Changed(QGeoCoordinate coordinate)
     if (!_lastPointGps2.isValid()) {
         _lastPointGps2 = coordinate;
         _pointsGps2.append(QVariant::fromValue(coordinate));
-        emit updateLastPoint(coordinate);
+        emit updateLastPoint2(coordinate);
         return;
     }
 
@@ -97,11 +97,12 @@ void TrajectoryPoints::_vehicleCoordinateGps2Changed(QGeoCoordinate coordinate)
         _lastAzimuthGps2 = _lastPointGps2.azimuthTo(coordinate);
         _lastPointGps2 = coordinate;
         _pointsGps2.append(QVariant::fromValue(coordinate));
-        emit pointAdded(coordinate);
+        emit pointAdded2(coordinate);
     } else {
         _lastPointGps2 = coordinate;
         _pointsGps2[_pointsGps2.count() - 1] = QVariant::fromValue(coordinate);
-        emit updateLastPoint(coordinate);
+        emit updateLastPoint2(coordinate);
+        emit pointAdded2(coordinate);
     }
 }
 
