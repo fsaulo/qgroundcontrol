@@ -716,6 +716,9 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
         _handleGpsRawInt(message);
         _handleGps1RawInt(message);
         break;
+    case MAVLINK_MSG_ID_NAMED_VALUE_INT:
+        _handleVermeerNameValueIntMsg(message);
+        break;
     case MAVLINK_MSG_ID_GPS2_RAW:
         _handleGps2Raw(message);
         break;
@@ -1321,6 +1324,15 @@ void Vehicle::_handleHighLatency2(mavlink_message_t& message)
         _onboardControlSensorsPresent = newOnboardControlSensorsEnabled;
         _onboardControlSensorsUnhealthy = 0;
     }
+}
+
+void Vehicle::_handleVermeerNameValueIntMsg(mavlink_message_t& message)
+{
+    mavlink_named_value_int_t nameValueInt;
+    mavlink_msg_named_value_int_decode(&message, &nameValueInt);
+    QString vermeerStatusName = QString(nameValueInt.name);
+    int vermeerStatusValue = nameValueInt.value;
+    emit updateVermeerStatus(vermeerStatusName,vermeerStatusValue);
 }
 
 void Vehicle::_handleAltitude(mavlink_message_t& message)
