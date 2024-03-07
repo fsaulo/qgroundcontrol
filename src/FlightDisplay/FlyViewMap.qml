@@ -13,7 +13,6 @@ import QtLocation                   5.3
 import QtPositioning                5.3
 import QtQuick.Dialogs              1.2
 import QtQuick.Layouts              1.11
-import QtQuick.Window               2.0
 
 import QGroundControl               1.0
 import QGroundControl.Controllers   1.0
@@ -421,175 +420,45 @@ FlightMap {
         }
     }
 
-    readonly property string sysMode: "SysMode"
-    CustomMapItems {	    readonly property string gpsJam: "GpsJam"
-        map:                    _root	    readonly property int gpsJammingDisabled: 0
-        largeMapView:           !pipMode	    readonly property int gpsJammingEnabled: 1
-        visible:                true	    readonly property int sysModeReady: 1
+    // Allow custom builds to add map items
+    CustomMapItems {
+        map:            _root
+        largeMapView:   !pipMode
+        visible: true
 
-    readonly property int sysModeSensorError: 2
-        Rectangle {	    readonly property int sysModeVPSError: 3
-            x:                0	    readonly property int sysModeRunning: 4
+                Rectangle {
+                    x:                0
+                    y:                _root.height - 400
+                    width:            300
+                    height:           130
+                    opacity:          0.6
+                    anchors.margins:  10
+                    radius:           3
+                    color:            "black"
 
-            function handleGpsJam(value){
-                if(flightMap.gpsJammingDisabled === value){
-                    vermeerGPSJammingState.text = "OFF"
-                    vermeerGPSJammingState.color = vermeerStatusUI.negativeColour
-                } else if (flightMap.gpsJammingEnabled === value){
-                    vermeerGPSJammingState.text = "ON"
-                    vermeerGPSJammingState.color = vermeerStatusUI.positiveColour
-                } else {
-                    var errorMsg = "Invalid Gps Jamming State: " + value
-                    console.log(errorMsg)
-                }
-            }
-
-            function handleSysModeMsg(value){
-                if(flightMap.sysModeReady === value){
-                    vermeerStatusState.text = "Ready"
-                    vermeerStatusCircle.color = vermeerStatusUI.positiveColour
-                } else if (flightMap.sysModeSensorError === value){
-                    vermeerStatusState.text = "Sensor Error"
-                    vermeerStatusCircle.color = vermeerStatusUI.negativeColour
-                } else if (flightMap.sysModeVPSError === value){
-                    vermeerStatusState.text = "VPS Error"
-                    vermeerStatusCircle.color = vermeerStatusUI.negativeColour
-                } else if (flightMap.sysModeRunning === value){
-                    vermeerStatusState.text = "Running"
-                    vermeerStatusCircle.color = vermeerStatusUI.positiveColour
-                } else {
-                    var errorMsg = "Invalid Sys Mode: " + value
-                    console.log(errorMsg)
-                }
-            }
-
-            Connections {
-                target: activeVehicle ? activeVehicle : null
-                onUpdateVermeerStatus: {
-                    if(flightMap.sysMode === vermeerStatusName){
-                        handleSysModeMsg(vermeerStatusValue)
-                    } else if (flightMap.gpsJam === vermeerStatusName) {
-                        handleGpsJam(vermeerStatusValue)
-                    } else {
-                        var errorMsg  = "Invalid Vermeer Status Name" + vermeerStatusName
-                        console.log(errorMsg)
-                    }
-                }
-            }
-
-            Rectangle {
-                readonly property string positiveColour: "#56D663"
-                readonly property string negativeColour: "#D6003F"
-
-                id: vermeerStatusUI
-                width: parent.width * 0.30
-                height: parent.height * 0.15
-                color: "#101010"
-                visible: true
-                radius: 12
-                x:parent.width * 0.99 - vermeerStatusUI.width
-                y:parent.height * 0.99 - vermeerStatusUI.height
-
-                // Allow custom builds to add map items
-                CustomMapItems {
-                    readonly property var legendBoxWidth:  370
-                    readonly property var legendBoxHeight: 180
-                    map:               flightMap
-                    largeMapView:      mainIsMap
-                    visible:           true
-                    x:                 vermeerStatusUI.width  * 0.50
-                    y:                 vermeerStatusUI.height * 0.10
-
-                    Rectangle {
-                        id: vermeerGpsLegends
-                        anchors.margins: _toolsMargin
+                    ColumnLayout {
+                        spacing: 5
+                        anchors.margins: 5
                         anchors.verticalCenter: parent.verticalCenter
-                        anchors.horizontalCenter: parent.horizontalCenter
-
-                                        width:             legendBoxWidth
-                                        height:            legendBoxHeight
-                                        opacity:           0.6
-                                        radius:            3
-                                        color:             "black"
-
-                                        ColumnLayout {
-                                            spacing: 5
-                                            LegendWidget {
-                                                routeName: "EKF"
-                                                routeColor: "red"
-                                            }
 
                         //QGCLabel {
                            // text: qsTr("Vehicle position GPS1 - Green: (%1)").arg(_activeVehicleCoordinate)
                             //font.family:    ScreenTools.demiboldFontFamily
                         //}
 
-                                            LegendWidget {
-                                                                routeName: "GPS1"
-                                                                routeColor: "green"
-                                                            }
-                                            LegendWidget {
-                                                                   routeName: "VPS"
-                                                                   routeColor: "blue"
-                                                               }
-                                        }
-                                    }
-
-                    Rectangle{
-                        id: vermeerStatusCircle
-                        width: 30
-                        height: 30
-                        visible: true
-                        radius: width/2
-                        color: vermeerStatusUI.negativeColour
-                        anchors.left: vermeerStatusUI.left
-                        anchors.top: vermeerStatusUI.top
-                        anchors.leftMargin: 20
-                        anchors.topMargin: 40
-                    }
-
-                    Text {
-                        id: vermeerStatusState
-                        text: qsTr("Offline")
-                        color: "white"
-                        anchors.left: vermeerStatusCircle.right
-                        anchors.top: vermeerStatusUI.top
-                        anchors.leftMargin: 10
-                        anchors.topMargin: 30
-                        font {
-                            pointSize: 16
-                            family: "Inter"
-                            bold: true
+                        LegendWidget {
+                                            routeName: "Vehicle position"
+                                            routeColor: "red"
                         }
-                    }
-
-                    Text {
-                        id: vermeerGPSJammingState
-                        text: qsTr("OFF")
-                        color: vermeerStatusUI.negativeColour
-                        anchors.left: vermeerStatusUI.left
-                        anchors.top: vermeerStatusState.bottom
-                        anchors.leftMargin: 10
-                        anchors.topMargin: 30
-                        font {
-                            pointSize: 16
-                            family: "Inter"
-                            bold: true
+                        LegendWidget {
+                                            routeName: "GPS1"
+                                            routeColor: "green"
                         }
-                    }
 
-                    Text {
-                        id: vermeerGPSJammingTittle
-                        text: qsTr("GPS Jam")
-                        color: "white"
-                        anchors.left: vermeerGPSJammingState.right
-                        anchors.top: vermeerStatusState.bottom
-                        anchors.leftMargin: 10
-                        anchors.topMargin: 30
-                        font {
-                            pointSize: 16
-                            family: "Inter"
-                            bold: true
+                        LegendWidget {
+                                            routeName: "VPS"
+                                            routeColor: "blue"
+                        }
 
                         LegendWidget {                                      //AA - GPS/VPS Distance1
                                id: vehicleToGPS1DistanceWidget

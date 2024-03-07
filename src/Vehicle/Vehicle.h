@@ -929,7 +929,6 @@ signals:
     void coordinateChanged              (QGeoCoordinate coordinate);
     void coordinateGps1Changed          (QGeoCoordinate coordinate);
     void coordinateGps2Changed          (QGeoCoordinate coordinate);
-    void updateVermeerStatus            (QString vermeerStatusName, int vermeerStatusValue);
     void joystickEnabledChanged         (bool enabled);
     void mavlinkMessageReceived         (const mavlink_message_t& message);
     void homePositionChanged            (const QGeoCoordinate& homePosition);
@@ -1086,7 +1085,6 @@ private:
     void _handleGpsRawInt               (mavlink_message_t& message);
     void _handleGps1RawInt              (mavlink_message_t& message);
     void _handleGps2Raw                 (mavlink_message_t& message);
-    void _handleVermeerNameValueIntMsg  (mavlink_message_t& message);
     void _handleGlobalPositionInt       (mavlink_message_t& message);
     void _handleAltitude                (mavlink_message_t& message);
     void _handleVfrHud                  (mavlink_message_t& message);
