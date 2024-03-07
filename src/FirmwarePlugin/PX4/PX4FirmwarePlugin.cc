@@ -86,7 +86,7 @@ PX4FirmwarePlugin::PX4FirmwarePlugin()
         { PX4_CUSTOM_MAIN_MODE_AUTO,        PX4_CUSTOM_SUB_MODE_AUTO_READY,         false,  true,   true },
         { PX4_CUSTOM_MAIN_MODE_AUTO,        PX4_CUSTOM_SUB_MODE_AUTO_RTGS,          false,  true,   true },
         { PX4_CUSTOM_MAIN_MODE_AUTO,        PX4_CUSTOM_SUB_MODE_AUTO_TAKEOFF,       false,  true,   true },
-        { PX4_CUSTOM_MAIN_MODE_VPS,         0,                                          true, false, true}
+        { PX4_CUSTOM_MAIN_MODE_VPS,         0,                                      true,   true,  true}
     };
 
     // Must be in same order as above structure
