@@ -196,6 +196,7 @@ Vehicle::Vehicle(LinkInterface*             link,
 
     connect(this, &Vehicle::flightModeChanged,          this, &Vehicle::_handleFlightModeChanged);
     connect(this, &Vehicle::armedChanged,               this, &Vehicle::_announceArmedChanged);
+    connect(this, &Vehicle::paramSensGpsPrimeChanged,   this, &Vehicle::_handleSensGpsPrimeChanged);
 
     connect(_toolbox->multiVehicleManager(), &MultiVehicleManager::parameterReadyVehicleAvailableChanged, this, &Vehicle::_vehicleParamLoaded);
 
@@ -715,6 +716,9 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
     case MAVLINK_MSG_ID_GPS_RAW_INT:
         _handleGpsRawInt(message);
         _handleGps1RawInt(message);
+        break;
+    case MAVLINK_MSG_ID_NAMED_VALUE_INT:
+        _handleVermeerNameValueIntMsg(message);
         break;
     case MAVLINK_MSG_ID_GPS2_RAW:
         _handleGps2Raw(message);
@@ -1323,6 +1327,14 @@ void Vehicle::_handleHighLatency2(mavlink_message_t& message)
     }
 }
 
+void Vehicle::_handleVermeerNameValueIntMsg(mavlink_message_t& message)
+{
+    mavlink_named_value_int_t nameValueInt;
+    mavlink_msg_named_value_int_decode(&message, &nameValueInt);
+    QString vermeerStatusName = QString(nameValueInt.name);
+    int vermeerStatusValue = nameValueInt.value;
+    emit updateVermeerStatus(vermeerStatusName,vermeerStatusValue);
+}
 void Vehicle::_handleAltitude(mavlink_message_t& message)
 {
     mavlink_altitude_t altitude;
@@ -1815,6 +1827,51 @@ void Vehicle::_handleCurrentMode(mavlink_message_t& message)
             emit flightModeChanged(flightMode());
         }
     }
+    if (parameterManager()->parametersReady() && px4Firmware()) {
+        int paramSensGpsPrime = parameterManager()->getParameter(_compID, "SENS_GPS_PRIME")->rawValue().toInt();
+        if (paramSensGpsPrime != _currentSensGpsPrime) {
+            _currentSensGpsPrime = paramSensGpsPrime;
+            emit paramSensGpsPrimeChanged(_currentSensGpsPrime);
+        }
+    }
+}
+
+void Vehicle::setParamSensGpsPrime(const QVariant& value)
+{
+    SharedLinkInterfacePtr sharedLink = vehicleLinkManager()->primaryLink().lock();
+    if (!sharedLink) {
+        qCDebug(VehicleLog) << "setFlightMode: primary link gone!";
+        return;
+    }
+
+    // create param value to SENS_GPS_PRIME
+    mavlink_param_set_t paramValue;
+    memset(&paramValue, 0, sizeof(paramValue));
+    paramValue.param_value = value.toFloat();
+    paramValue.target_system = static_cast<uint8_t>(id());
+    paramValue.target_component = _compID;
+    paramValue.param_type = MAV_PARAM_TYPE_INT32;
+
+    mavlink_param_union_t uv;
+    uv.param_int32 = paramValue.param_value;
+
+    // copy union value to itermediate var to send mavlink cmd
+    float float_tmp;
+    float_tmp = uv.param_float;
+
+    // send MAV_CMD_DO_SET_PARAMETER
+    mavlink_message_t msg;
+    mavlink_msg_param_set_pack_chan(static_cast<uint8_t>(_mavlink->getSystemId()),
+                                    static_cast<uint8_t>(_mavlink->getComponentId()),
+                                    sharedLink->mavlinkChannel(),
+                                    &msg,
+                                    paramValue.target_system,
+                                    paramValue.target_component,
+                                    "SENS_GPS_PRIME",
+                                    float_tmp,
+                                    paramValue.param_type);
+
+    sendMessageOnLinkThreadSafe(sharedLink.get(), msg);
 }
 
 void Vehicle::_handleRadioStatus(mavlink_message_t& message)
@@ -2281,6 +2338,10 @@ bool Vehicle::setFlightModeCustom(const QString& flightMode, uint8_t* base_mode,
     }
     return _firmwarePlugin->setFlightMode(flightMode, base_mode, custom_mode);
 }
+int Vehicle::paramSensGpsPrime() const
+{
+    return _currentSensGpsPrime;
+}
 
 void Vehicle::setFlightMode(const QString& flightMode)
 {
@@ -2486,6 +2547,10 @@ void Vehicle::_parametersReady(bool parametersReady)
         disconnect(_parameterManager, &ParameterManager::parametersReadyChanged, this, &Vehicle::_parametersReady);
         _setupAutoDisarmSignalling();
         _initialConnectStateMachine->advance();
+        if (px4Firmware()) {
+            _currentSensGpsPrime = parameterManager()->getParameter(_compID, "SENS_GPS_PRIME")->rawValue().toInt();
+            emit paramSensGpsPrimeChanged(_currentSensGpsPrime);
+        }
     }
 
     _multirotor_speed_limits_available = _firmwarePlugin->mulirotorSpeedLimitsAvailable(this);
@@ -2680,7 +2745,10 @@ void Vehicle::_handleFlightModeChanged(const QString& flightMode)
     _say(tr("%1 %2 flight mode").arg(_vehicleIdSpeech()).arg(flightMode));
     emit guidedModeChanged(_firmwarePlugin->isGuidedMode(this));
 }
-
+void Vehicle::_handleSensGpsPrimeChanged(int paramSensGpsPrime)
+{
+    _say(tr("%1 SENS_GPS_PRIME %2").arg(_vehicleIdSpeech()).arg(paramSensGpsPrime));
+}
 void Vehicle::_announceArmedChanged(bool armed)
 {
     _say(QString("%1 %2").arg(_vehicleIdSpeech()).arg(armed ? tr("armed") : tr("disarmed")));

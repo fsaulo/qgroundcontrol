@@ -32,6 +32,7 @@ Rectangle {
     property var    _activeVehicle:     QGroundControl.multiVehicleManager.activeVehicle
     property bool   _communicationLost: _activeVehicle ? _activeVehicle.vehicleLinkManager.communicationLost : false
     property color  _mainStatusBGColor: qgcPal.brandingPurple
+    property bool _vpsActive: _activeVehicle ? _activeVehicle.paramSensGpsPrime == 1 : false
 
     function dropMessageIndicatorTool() {
         if (currentToolbar === flyViewToolbar) {
@@ -82,7 +83,23 @@ Rectangle {
             Layout.preferredHeight: viewButtonRow.height
             visible:                currentToolbar === flyViewToolbar
         }
+        // button to activate vps
+                QGCButton {
 
+                    id:      vpsButton
+                    text:    _vpsActive ? qsTr("Disable VPS") : qsTr("Enable VPS")
+                    visible: _activeVehicle && _activeVehicle.px4Firmware && currentToolbar === flyViewToolbar
+                    enabled: true
+                    onClicked: _updateVpsButton()
+
+                    function _updateVpsButton() {
+                        if (_vpsActive) {
+                            _activeVehicle.setParamSensGpsPrime(0)
+                        } else {
+                            _activeVehicle.setParamSensGpsPrime(1)
+                        }
+                    }
+                }
         QGCButton {
             id:                 disconnectButton
             text:               qsTr("Disconnect")

@@ -13,6 +13,7 @@ import QtLocation                   5.3
 import QtPositioning                5.3
 import QtQuick.Dialogs              1.2
 import QtQuick.Layouts              1.11
+import QtQuick.Window 2.0
 
 import QGroundControl               1.0
 import QGroundControl.Controllers   1.0
@@ -212,26 +213,7 @@ FlightMap {
         }
     }
 
-    function calculateDistance(coord1, coord2) {                                        //AA - This is the distance function for GPS to VPS
-            var distanceMeters = coord1.distanceTo(coord2); // Distance in meters
-            var distanceFeet = distanceMeters * 3.28084; // Convert meters to feet
-            return {
-                meters: distanceMeters,
-                feet: distanceFeet
-            };
-        }
 
-    function updateDistances() {                //AA - updates distance VPS calc and timer
-        var vehicleToGPS1 = calculateDistance(_activeVehicleCoordinate, _activeVehicleCoordinateGps1);
-            vehicleToGPS1DistanceWidget.routeName = "Vehicle to GPS1 Distance: " + vehicleToGPS1.meters.toFixed(2) + " m / " + vehicleToGPS1.feet.toFixed(2) + " ft";
-
-        var vehicleToGPS2 = calculateDistance(_activeVehicleCoordinate, _activeVehicleCoordinateGps2);
-            vehicleToGPS2DistanceWidget.routeName = "Vehicle to VPS Distance: " + vehicleToGPS2.meters.toFixed(2) + " m / " + vehicleToGPS2.feet.toFixed(2) + " ft";
-
-        var GPS1ToVPS = calculateDistance(_activeVehicleCoordinateGps1, _activeVehicleCoordinateGps2);
-            gps1ToVPSDistanceWidget.routeName = "GPS1 to VPS Distance Est: " + GPS1ToVPS.meters.toFixed(2) + " m / " + GPS1ToVPS.feet.toFixed(2) + " ft";
-
-    }
 
     Timer {
         id:         panRecenterTimer
@@ -250,14 +232,6 @@ FlightMap {
         onTriggered:    updateMapToVehiclePosition()
     }
 
-    Timer {                     //AA This is the timer for the VPS disance calc
-        interval: 100 // Update every 0.1 seconds
-        running: true
-        repeat: true
-        onTriggered: {
-            updateDistances();
-        }
-    }
 
     QGCMapPalette { id: mapPal; lightColors: isSatelliteMap }
 
@@ -420,78 +394,190 @@ FlightMap {
         }
     }
 
-    // Allow custom builds to add map items
-    CustomMapItems {
-        map:            _root
-        largeMapView:   !pipMode
-        visible: true
+    readonly property string sysMode: "SysMode"
+    readonly property string gpsJam: "GpsJam"
+    readonly property int gpsJammingDisabled: 0
+    readonly property int gpsJammingEnabled: 1
+    readonly property int sysModeReady: 1
+    readonly property int sysModeSensorError: 2
+    readonly property int sysModeVPSError: 3
+    readonly property int sysModeRunning: 4
+
+    function handleGpsJam(value){
+            if(_root.gpsJammingDisabled === value){
+                vermeerGPSJammingState.text = "OFF"
+                vermeerGPSJammingState.color = vermeerStatusUI.negativeColour
+            } else if (_root.gpsJammingEnabled === value){
+                vermeerGPSJammingState.text = "ON"
+                vermeerGPSJammingState.color = vermeerStatusUI.positiveColour
+            } else {
+                var errorMsg = "Invalid Gps Jamming State: " + value
+                console.log(errorMsg)
+            }
+        }
+
+        function handleSysModeMsg(value){
+            if(_root.sysModeReady === value){
+                vermeerStatusState.text = "Ready"
+                vermeerStatusCircle.color = vermeerStatusUI.positiveColour
+            } else if (_root.sysModeSensorError === value){
+                vermeerStatusState.text = "Sensor\nError"
+                vermeerStatusCircle.color = vermeerStatusUI.negativeColour
+            } else if (_root.sysModeVPSError === value){
+                vermeerStatusState.text = "VPS\nError"
+                vermeerStatusCircle.color = vermeerStatusUI.negativeColour
+            } else if (_root.sysModeRunning === value){
+                vermeerStatusState.text = "Running"
+                vermeerStatusCircle.color = vermeerStatusUI.positiveColour
+            } else {
+                var errorMsg = "Invalid Sys Mode: " + value
+                console.log(errorMsg)
+            }
+        }
+
+        Connections {
+            target: _activeVehicle ? _activeVehicle : null
+            onUpdateVermeerStatus: {
+                if(_root.sysMode === vermeerStatusName){
+                    handleSysModeMsg(vermeerStatusValue)
+                } else if (_root.gpsJam === vermeerStatusName) {
+                    handleGpsJam(vermeerStatusValue)
+                } else {
+                    var errorMsg  = "Invalid Vermeer Status Name" + vermeerStatusName
+                    console.log(errorMsg)
+                }
+            }
+        }
+
+        Rectangle {
+            readonly property string positiveColour: "#56D663"
+            readonly property string negativeColour: "#D6003F"
+
+            id: vermeerStatusUI
+            width: 180 + parent.width * 0.05
+            height: 90
+            color: "#101010"
+            visible: true
+            radius: 12
+            //x:parent.width * 0.99 - vermeerStatusUI.width
+            x:40
+            y:parent.height * 0.99 - vermeerStatusUI.height - 10
+
+            // Allow custom builds to add map items
+            CustomMapItems {
+                readonly property var legendBoxWidth:  370
+                readonly property var legendBoxHeight: 180
+
+                map:               _root
+                largeMapView:      mainIsMap
+                visible:           true
+                x:                 vermeerStatusUI.width  * 0.50
+                y:                 vermeerStatusUI.height * 0.10
 
                 Rectangle {
-                    x:                0
-                    y:                _root.height - 400
-                    width:            300
-                    height:           130
-                    opacity:          0.6
-                    anchors.margins:  10
-                    radius:           3
-                    color:            "black"
+                    id: vermeerGpsLegends
+                    anchors.margins: _toolsMargin
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    width:             legendBoxWidth
+                    height:            legendBoxHeight
+                    opacity:           0.6
+                    radius:            3
+                    color:             "black"
 
                     ColumnLayout {
                         spacing: 5
-                        anchors.margins: 5
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        //QGCLabel {
-                           // text: qsTr("Vehicle position GPS1 - Green: (%1)").arg(_activeVehicleCoordinate)
-                            //font.family:    ScreenTools.demiboldFontFamily
-                        //}
-
                         LegendWidget {
-                                            routeName: "Vehicle position"
-                                            routeColor: "red"
-                        }
-                        LegendWidget {
-                                            routeName: "GPS1"
-                                            routeColor: "green"
+                            routeName: "EKF"
+                            routeColor: "red"
                         }
 
                         LegendWidget {
-                                            routeName: "VPS"
-                                            routeColor: "blue"
+                            routeName: "GPS1"
+                            routeColor: "green"
                         }
 
-                        LegendWidget {                                      //AA - GPS/VPS Distance1
-                               id: vehicleToGPS1DistanceWidget
-                               routeName: "Vehicle to GPS1 Distance: Calculating..."
-                               routeColor: "black" // Choose an appropriate color
-                           }
-
-                        LegendWidget {                                      //AA - GPS/VPS Distance2
-                               id: vehicleToGPS2DistanceWidget
-                               routeName: "Vehicle to VPS Distance: Calculating..."
-                               routeColor: "black" // Choose an appropriate color
-                           }
-
-                        LegendWidget {                                      //AA - GPS/VPS Distance3
-                               id: gps1ToVPSDistanceWidget
-                               routeName: "GPS1 to VPS Distance: Calculating..."
-                               routeColor: "black" // Choose an appropriate color
-                           }
-
-                            //textFormat: Text.RichText
-                            //text: qsTr("Vehicle position GPS1 - <font color='green'>Green</font>: (%1)").arg(_activeVehicleCoordinate)
-                            //font.family: ScreenTools.demiboldFontFamily
-
-                           // textFormat: Text.RichText
-                            //text: qsTr("Vehicle position GPS2 - <font color='blue'>Blue</font>: (%1)").arg(_activeVehicleCoordinate)
-                            //font.family:    ScreenTools.demiboldFontFamily
-
-                       // QGCLabel {
-                         //   text: qsTr("Vehicle position GPS2 - Blue: (%1)").arg(_activeVehicleCoordinate)
-                           // font.family:    ScreenTools.demiboldFontFamily
-
+                        LegendWidget {
+                            routeName: "VPS"
+                            routeColor: "blue"
+                        }
                     }
                 }
+            }
+
+            ColumnLayout {
+                spacing: 10
+                anchors.verticalCenter: parent.verticalCenter
+
+                RowLayout {
+                    spacing: 5
+                    Layout.leftMargin: 10
+
+                    Rectangle{
+                        id: vermeerStatusCircle
+                        width: 30
+                        height: 30
+                        visible: true
+                        radius: width/2
+                        color: vermeerStatusUI.negativeColour
+                        anchors.left: vermeerStatusUI.left
+                        anchors.top: vermeerStatusUI.top
+                        anchors.leftMargin: 10
+                        anchors.topMargin: 20
+                    }
+
+                    Text {
+                        id: vermeerStatusState
+                        text: qsTr("Offline")
+                        color: "white"
+                        anchors.left: vermeerStatusCircle.right
+                        anchors.top: vermeerStatusUI.top
+                        anchors.leftMargin: 10
+                        anchors.topMargin: 20
+                        font {
+                            pointSize: 9
+                            family: "Inter"
+                            bold: true
+                        }
+                    }
+                }
+
+                RowLayout {
+                    spacing: 5
+                    Layout.leftMargin: 10
+
+                    Text {
+                        id: vermeerGPSJammingState
+                        text: qsTr("OFF")
+                        color: vermeerStatusUI.negativeColour
+                        anchors.left: vermeerStatusUI.left
+                        anchors.top: vermeerStatusState.bottom
+                        anchors.leftMargin: 10
+                        anchors.topMargin: 20
+                        font {
+                            pointSize: 9
+                            family: "Inter"
+                            bold: true
+                        }
+                    }
+
+                    Text {
+                        id: vermeerGPSJammingTittle
+                        text: qsTr("GPS Jam")
+                        color: "white"
+                        anchors.left: vermeerGPSJammingState.right
+                        anchors.top: vermeerStatusState.bottom
+                        anchors.leftMargin: 10
+                        anchors.topMargin: 20
+                        font {
+                            pointSize: 9
+                            family: "Inter"
+                            bold: true
+                        }
+                    }
+                }
+            }
     }
 
 

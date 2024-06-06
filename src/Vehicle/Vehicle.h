@@ -170,6 +170,7 @@ public:
     Q_PROPERTY(bool                 flightModeSetAvailable      READ flightModeSetAvailable                                         CONSTANT)
     Q_PROPERTY(QStringList          flightModes                 READ flightModes                                                    NOTIFY flightModesChanged)
     Q_PROPERTY(QString              flightMode                  READ flightMode                 WRITE setFlightMode                 NOTIFY flightModeChanged)
+    Q_PROPERTY(int                  paramSensGpsPrime           READ paramSensGpsPrime                                              NOTIFY paramSensGpsPrimeChanged)
     Q_PROPERTY(TrajectoryPoints*    trajectoryPoints            MEMBER _trajectoryPoints                                            CONSTANT)
     Q_PROPERTY(QmlObjectListModel*  cameraTriggerPoints         READ cameraTriggerPoints                                            CONSTANT)
     Q_PROPERTY(float                latitude                    READ latitude                                                       NOTIFY coordinateChanged)
@@ -531,6 +532,7 @@ public:
     bool flightModeSetAvailable             ();
     QStringList flightModes                 ();
     QString flightMode                      () const;
+    int paramSensGpsPrime                   () const;
     void setFlightMode                      (const QString& flightMode);
 
     bool airship() const;
@@ -924,17 +926,20 @@ public slots:
     void setVtolInFwdFlight                 (bool vtolInFwdFlight);
     void _offlineFirmwareTypeSettingChanged (QVariant varFirmwareType); // Should only be used by MissionControler to set firmware from Plan file
     void _offlineVehicleTypeSettingChanged  (QVariant varVehicleType);  // Should only be used by MissionController to set vehicle type from Plan file
+    void setParamSensGpsPrime               (const QVariant& value);
 
 signals:
     void coordinateChanged              (QGeoCoordinate coordinate);
     void coordinateGps1Changed          (QGeoCoordinate coordinate);
     void coordinateGps2Changed          (QGeoCoordinate coordinate);
+    void updateVermeerStatus            (QString vermeerStatusName, int vermeerStatusValue);
     void joystickEnabledChanged         (bool enabled);
     void mavlinkMessageReceived         (const mavlink_message_t& message);
     void homePositionChanged            (const QGeoCoordinate& homePosition);
     void armedPositionChanged();
     void armedChanged                   (bool armed);
     void flightModeChanged              (const QString& flightMode);
+    void paramSensGpsPrimeChanged       (int paramSensGpsPrime);
     void flyingChanged                  (bool flying);
     void landingChanged                 (bool landing);
     void guidedModeChanged              (bool guidedMode);
@@ -1040,6 +1045,7 @@ private slots:
     void _parametersReady                   (bool parametersReady);
     void _remoteControlRSSIChanged          (uint8_t rssi);
     void _handleFlightModeChanged           (const QString& flightMode);
+    void _handleSensGpsPrimeChanged         (int sensGpsPrime);
     void _announceArmedChanged              (bool armed);
     void _offlineCruiseSpeedSettingChanged  (QVariant value);
     void _offlineHoverSpeedSettingChanged   (QVariant value);
@@ -1085,6 +1091,7 @@ private:
     void _handleGpsRawInt               (mavlink_message_t& message);
     void _handleGps1RawInt              (mavlink_message_t& message);
     void _handleGps2Raw                 (mavlink_message_t& message);
+    void _handleVermeerNameValueIntMsg  (mavlink_message_t& message);
     void _handleGlobalPositionInt       (mavlink_message_t& message);
     void _handleAltitude                (mavlink_message_t& message);
     void _handleVfrHud                  (mavlink_message_t& message);
@@ -1200,6 +1207,7 @@ private:
     bool            _readyToFlyAvailable                    = false;
     bool            _readyToFly                             = false;
     bool            _allSensorsHealthy                      = true;
+    int             _currentSensGpsPrime                    = 0;
 
     SysStatusSensorInfo _sysStatusSensorInfo;
 
