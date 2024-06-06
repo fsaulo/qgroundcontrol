@@ -1813,6 +1813,14 @@ void Vehicle::_handleHeartbeat(mavlink_message_t& message)
             emit flightModeChanged(flightMode());
         }
     }
+    
+    if (parameterManager()->parametersReady() && px4Firmware()) {
+        int paramSensGpsPrime = parameterManager()->getParameter(_compID, "SENS_GPS_PRIME")->rawValue().toInt();
+        if (paramSensGpsPrime != _currentSensGpsPrime) {
+            _currentSensGpsPrime = paramSensGpsPrime;
+            emit paramSensGpsPrimeChanged(_currentSensGpsPrime);
+        }
+    }
 }
 
 void Vehicle::_handleCurrentMode(mavlink_message_t& message)
@@ -1825,13 +1833,6 @@ void Vehicle::_handleCurrentMode(mavlink_message_t& message)
         _custom_mode_user_intention = currentMode.intended_custom_mode;
         if (changed) {
             emit flightModeChanged(flightMode());
-        }
-    }
-    if (parameterManager()->parametersReady() && px4Firmware()) {
-        int paramSensGpsPrime = parameterManager()->getParameter(_compID, "SENS_GPS_PRIME")->rawValue().toInt();
-        if (paramSensGpsPrime != _currentSensGpsPrime) {
-            _currentSensGpsPrime = paramSensGpsPrime;
-            emit paramSensGpsPrimeChanged(_currentSensGpsPrime);
         }
     }
 }
@@ -1852,6 +1853,10 @@ void Vehicle::setParamSensGpsPrime(const QVariant& value)
     paramValue.target_component = _compID;
     paramValue.param_type = MAV_PARAM_TYPE_INT32;
 
+    char param_id[16];
+    memset(param_id, 0, sizeof(param_id));
+    strncpy(param_id, "SENS_GPS_PRIME", sizeof(param_id) - 1);
+
     mavlink_param_union_t uv;
     uv.param_int32 = paramValue.param_value;
 
@@ -1867,7 +1872,7 @@ void Vehicle::setParamSensGpsPrime(const QVariant& value)
                                     &msg,
                                     paramValue.target_system,
                                     paramValue.target_component,
-                                    "SENS_GPS_PRIME",
+                                    param_id,
                                     float_tmp,
                                     paramValue.param_type);
 

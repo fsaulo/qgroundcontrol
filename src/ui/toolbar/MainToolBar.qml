@@ -84,22 +84,14 @@ Rectangle {
             visible:                currentToolbar === flyViewToolbar
         }
         // button to activate vps
-                QGCButton {
+        QGCButton {
 
-                    id:      vpsButton
-                    text:    _vpsActive ? qsTr("Disable VPS") : qsTr("Enable VPS")
-                    visible: _activeVehicle && _activeVehicle.px4Firmware && currentToolbar === flyViewToolbar
-                    enabled: true
-                    onClicked: _updateVpsButton()
-
-                    function _updateVpsButton() {
-                        if (_vpsActive) {
-                            _activeVehicle.setParamSensGpsPrime(0)
-                        } else {
-                            _activeVehicle.setParamSensGpsPrime(1)
-                        }
-                    }
-                }
+            id:      vpsButton
+            text:    _vpsActive ? qsTr("Disable VPS") : qsTr("Enable VPS")
+            visible: _activeVehicle && _activeVehicle.px4Firmware && currentToolbar === flyViewToolbar
+            enabled: true
+            onClicked: _activeVehicle.setParamSensGpsPrime(_vpsActive ? 0 : 1)
+        }
         QGCButton {
             id:                 disconnectButton
             text:               qsTr("Disconnect")
